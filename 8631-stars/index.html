@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>8,631 stars</title>
+<meta name="description" content="A 360° panorama of the naked-eye sky, built from the HYG star catalogue — and an account of every choice made between the data and the image.">
+<style>
+  :root{
+    --bg:#07080c; --panel:#0d0f16; --ink:#d9dbe3; --ink-dim:#9095a4;
+    --ink-faint:#666c7d; --rule:#1c2030;
+    --accent:#e8c98a; --accent-dim:#8d8fa0;
+    --gutter:0px;          /* edge-to-edge on desktop */
+    --radius:0px;
+    /* viewport-fit=cover puts the page under the notch and the home bar, so
+       the insets have to be paid back here. A phone in landscape has the
+       notch on one side only, which is why left and right are separate. */
+    --edge-l:max(var(--gutter), env(safe-area-inset-left,  0px));
+    --edge-r:max(var(--gutter), env(safe-area-inset-right, 0px));
+    --edge-b:env(safe-area-inset-bottom, 0px);
+  }
+  /* Breathing room down each side on phones, so the panorama and the text are
+     not jammed against the screen edges. Portrait is caught by width; a phone
+     in landscape is wider than 700px, so it gets caught by height instead. */
+  @media (max-width:700px){
+    :root{ --gutter:14px; --radius:12px; }
+  }
+  @media (orientation:landscape) and (max-height:560px) and (max-width:1024px){
+    :root{ --gutter:14px; --radius:12px; }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.7 ui-serif, Georgia, "Iowan Old Style", "Times New Roman", serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .sans{font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+
+  /* ---- top bar ---- */
+  /* daisyUI's navbar/navbar-start shape, written in this page's own CSS: one
+     icon does not justify loading Tailwind's browser build over a page that
+     already ships 300KB of krpano. */
+  .topbar{display:flex; align-items:center;
+    padding:12px max(18px,var(--edge-r)) 0 max(18px,var(--edge-l))}
+  .topbar a{display:inline-flex; align-items:center; justify-content:center;
+    width:40px; height:40px; border-radius:10px; color:var(--ink-dim);
+    background:rgba(255,255,255,.03); border:1px solid var(--rule);
+    transition:color .25s ease, border-color .25s ease, background .25s ease}
+  .topbar a:hover{color:var(--accent); border-color:rgba(232,201,138,.45);
+    background:rgba(232,201,138,.08)}
+  .topbar svg{width:19px; height:19px; fill:currentColor; display:block}
+
+  /* ---- page head (outside the pano) ---- */
+  .page-head{max-width:44rem; margin:0 auto;
+    padding:clamp(18px,3.4vw,34px) var(--edge-r) clamp(14px,2.5vw,20px) var(--edge-l)}
+  .page-head h1{margin:0; font-size:clamp(26px,5vw,46px); line-height:1.1; letter-spacing:-.02em;
+    font-weight:600; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .page-head .sub{margin:.55em 0 0; color:var(--ink-dim);
+    font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:clamp(13.5px,2vw,16px); line-height:1.55}
+
+  /* ---- viewer ---- */
+  /* 90vh, not 100: a strip of page stays visible so it reads as scrollable.
+     svh tracks the mobile URL bar; vh is the fallback for older browsers. */
+  #stage{position:relative; height:90vh; height:90svh; min-height:360px;
+         margin:0 var(--edge-r) 0 var(--edge-l); background:#000; border-radius:var(--radius);
+         overflow:hidden; border:1px solid var(--rule)}
+  #pano{position:absolute; inset:0}
+
+  /* ---- badge (outside the pano) ---- */
+  .badge-row{display:flex; justify-content:center;
+    padding:clamp(20px,3.5vw,30px) var(--edge-r) 0 var(--edge-l)}
+  .badge{display:inline-flex; align-items:center; gap:.6em; padding:.72em 1.5em; border-radius:999px;
+    font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:12.5px; letter-spacing:.15em; text-transform:uppercase; font-weight:600;
+    color:var(--accent); border:1px solid rgba(232,201,138,.4); background:rgba(232,201,138,.06);
+    box-shadow:0 0 26px rgba(232,201,138,.16), inset 0 0 20px rgba(232,201,138,.05);
+    animation:glow 3.6s ease-in-out infinite;
+    transition:background .3s ease, box-shadow .3s ease, transform .3s ease}
+  .badge:hover{background:rgba(232,201,138,.13); border-color:var(--accent);
+    box-shadow:0 0 36px rgba(232,201,138,.34); transform:translateY(-1px)}
+  .badge .arrow{font-size:15px; letter-spacing:0}
+  @keyframes glow{
+    0%,100%{box-shadow:0 0 22px rgba(232,201,138,.13), inset 0 0 18px rgba(232,201,138,.04)}
+    50%    {box-shadow:0 0 34px rgba(232,201,138,.28), inset 0 0 22px rgba(232,201,138,.08)}
+  }
+  @media (prefers-reduced-motion:reduce){ .badge{animation:none} }
+
+  /* ---- article ---- */
+  main{max-width:44rem; margin:0 auto;
+       padding:clamp(34px,6vw,72px) max(clamp(20px,5vw,32px), var(--edge-r))
+               calc(96px + var(--edge-b)) max(clamp(20px,5vw,32px), var(--edge-l))}
+  .lede{font-size:clamp(18px,2.6vw,21px); line-height:1.62; color:var(--ink)}
+  .lede em{color:var(--accent); font-style:italic}
+  h2{font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+     font-size:13px; letter-spacing:.15em; text-transform:uppercase; font-weight:650;
+     color:var(--accent); margin:3.2em 0 .2em}
+  h2 + p, h2 + .rule + p{margin-top:.6em}
+  h3{font-size:clamp(19px,3vw,23px); font-weight:600; letter-spacing:-.01em;
+     margin:2.2em 0 .1em; color:#fff}
+  p{margin:1.05em 0}
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid rgba(232,201,138,.35)}
+  a:hover{border-bottom-color:var(--accent)}
+  strong{color:#fff; font-weight:600}
+  hr{border:0; border-top:1px solid var(--rule); margin:3.4em 0}
+  ul{padding-left:1.1em} li{margin:.5em 0}
+
+  code, pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  code{font-size:.88em; color:var(--accent); background:rgba(232,201,138,.08);
+       padding:.12em .38em; border-radius:4px}
+  /* Both axes stated explicitly: with only overflow-x set, the computed value
+     came back as `hidden`, which clips a long formula on a narrow screen
+     instead of letting it scroll. */
+  pre{background:var(--panel); border:1px solid var(--rule); border-radius:10px;
+      padding:16px 18px; overflow-x:auto; overflow-y:hidden; font-size:14px;
+      line-height:1.6; color:#e3e6ee; -webkit-overflow-scrolling:touch}
+  pre code{background:none; color:inherit; padding:0; font-size:inherit}
+
+  .tablewrap{overflow-x:auto; margin:1.6em 0; border:1px solid var(--rule); border-radius:10px}
+  table{border-collapse:collapse; width:100%; font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif;
+        font-size:14.5px}
+  th,td{padding:11px 14px; text-align:left; border-bottom:1px solid var(--rule); white-space:nowrap}
+  thead th{color:var(--ink-dim); font-weight:600; font-size:12px; letter-spacing:.09em;
+           text-transform:uppercase; background:var(--panel)}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr:last-child{background:rgba(232,201,138,.05)}
+  .num{text-align:right; font-variant-numeric:tabular-nums}
+
+  .note{border-left:2px solid var(--accent); padding:.1em 0 .1em 1.1em; margin:1.8em 0;
+        color:var(--ink-dim)}
+  footer{border-top:1px solid var(--rule); margin-top:4em; padding-top:1.6em;
+         color:var(--ink-faint); font-size:14px}
+  footer a{color:var(--ink-dim); border-bottom-color:var(--rule)}
+
+  /* ---- phones, both orientations ----
+     Bar, masthead, sky and badge become one viewport-tall column, so the sky
+     takes whatever is left over and the badge lands on screen without
+     scrolling. A fixed 90vh stage pushed it below the fold in landscape. */
+  @media (max-width:700px), (orientation:landscape) and (max-height:560px) and (max-width:1024px){
+    .hero{display:flex; flex-direction:column; height:100vh; height:100svh}
+    #stage{flex:1 1 auto; height:auto; min-height:170px}
+    .badge-row{padding-top:12px; padding-bottom:calc(10px + var(--edge-b))}
+    .badge{font-size:11px; letter-spacing:.11em; padding:.6em 1.2em; gap:.45em}
+    .badge .arrow{font-size:13px}
+  }
+  /* A landscape phone is ~390px tall in total, so the masthead gives up most
+     of its height to keep the sky worth looking at. */
+  @media (orientation:landscape) and (max-height:560px) and (max-width:1024px){
+    .topbar{padding-top:8px}
+    .topbar a{width:34px; height:34px}
+    .topbar svg{width:17px; height:17px}
+    .page-head{padding-top:6px; padding-bottom:8px}
+    .page-head h1{font-size:21px}
+    .page-head .sub{margin-top:.35em; font-size:12.5px; line-height:1.45}
+    .badge-row{padding-top:10px}
+    .badge{font-size:10.5px; padding:.5em 1em}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+
+<nav class="topbar" aria-label="Elsewhere">
+  <a href="https://www.linkedin.com/in/alekseyzabelin/" target="_blank" rel="noopener"
+     aria-label="Aleksey Zabelin on LinkedIn" title="Aleksey Zabelin on LinkedIn">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
+  </a>
+</nav>
+
+<header class="page-head">
+  <h1>Dataviz &middot; 8,631 stars</h1>
+  <p class="sub">Every star a dark-adapted eye can see, placed where the catalogue
+  says it is. Drag the sky to look around.</p>
+</header>
+
+<div id="stage">
+  <div id="pano"><noscript style="display:block;padding:2rem;color:#fff">
+    This panorama needs JavaScript. The written account is below.</noscript></div>
+</div>
+
+<div class="badge-row">
+  <a class="badge" href="#article">Read how it was made <span class="arrow">&darr;</span></a>
+</div>
+
+</div><!-- /.hero -->
+
+<main id="article">
+  <p class="lede">Drag the panorama above and you are looking at every star a
+  dark-adapted eye could see &mdash; 8,631 of them, each placed at its measured
+  position and its measured distance, coloured by its measured temperature.</p>
+
+  <p>Nothing in it is drawn by hand. But a literal plot of the data would be a
+  black rectangle with a few sub-pixel dots, so a handful of deliberate choices
+  stand between the numbers and the image. <em>This is all of them.</em></p>
+
+  <hr>
+
+  <h2>1 &middot; Where the data comes from</h2>
+
+  <p>One source: the <strong>HYG database v4.2</strong> &mdash; a merge of the
+  <strong>H</strong>ipparcos, <strong>Y</strong>ale Bright Star and
+  <strong>G</strong>liese catalogues, compiled by Astronexus. 119,626 stars, each
+  with a position, a distance, a brightness and a colour index.</p>
+
+  <p>A second, tiny source: <strong>Astropy's ephemeris</strong>, used once, to
+  find where Earth was on the render date. That is the camera position.</p>
+
+  <p>That's it. No image was pasted in, no second catalogue was joined on.</p>
+
+  <h3>From 119,626 stars to 8,631</h3>
+
+  <div class="tablewrap"><table>
+    <thead><tr><th>Step</th><th>Rule</th><th class="num">Removed</th><th class="num">Left</th></tr></thead>
+    <tbody>
+      <tr><td>start</td><td>HYG v4.2</td><td class="num">&mdash;</td><td class="num">119,626</td></tr>
+      <tr><td>naked-eye limit</td><td><code>mag &lt; 6.5</code></td><td class="num">110,791</td><td class="num">8,835</td></tr>
+      <tr><td>drop the Sun</td><td>it's the viewpoint, not scenery</td><td class="num">1</td><td class="num">8,834</td></tr>
+      <tr><td>drop bad parallax</td><td>HYG flags unusable distances</td><td class="num">203</td><td class="num"><strong>8,631</strong></td></tr>
+    </tbody>
+  </table></div>
+
+  <p>Magnitude 6.5 is the conventional limit of unaided vision under a dark sky.
+  The brightest survivor is Sirius at &minus;1.44; the faintest sit right at 6.49.
+  They span 1.3 to 980 parsecs &mdash; 4.3 to 3,198 light years. 389 have proper
+  names; 2,994 more carry a Bayer or Flamsteed designation.</p>
+
+  <p>Their positions are used <strong>exactly as the catalogue gives them</strong>:
+  ICRS equatorial cartesian coordinates in parsecs, epoch J2000. The stars are
+  placed at their true three-dimensional distances inside the scene &mdash; not
+  pasted onto the inside of a sphere.</p>
+
+  <hr>
+
+  <h2>2 &middot; What gets calculated</h2>
+
+  <p>Three quantities are derived from the catalogue. Everything else is used raw.</p>
+
+  <h3>Brightness</h3>
+  <p>Apparent magnitude is a logarithmic, backwards scale, so it becomes a linear
+  emission value:</p>
+  <pre><code>energy = 10 ^ ((6.5 &minus; mag) / 2.5)</code></pre>
+  <p>Anchored so the faintest visible star is exactly 1.0. Each step of one
+  magnitude is a factor of 2.512. Sirius comes out at <strong>1,500&times;</strong>
+  the faintest star &mdash; that ratio is the real dynamic range of the night sky,
+  and it is the central problem of drawing one.</p>
+
+  <h3>Temperature</h3>
+  <p>The catalogue's B&minus;V colour index becomes a blackbody temperature via
+  Ballesteros' 2012 fit:</p>
+  <pre><code>T = 4600 · ( 1/(0.92·ci + 1.7) + 1/(0.92·ci + 0.62) )</code></pre>
+  <p>The 8,631 stars span <strong>2,213 K</strong> (deep red giants) to
+  <strong>16,991 K</strong> (blue-white O and B stars). 31 stars have no colour
+  index recorded and default to solar white.</p>
+
+  <h3>Colour</h3>
+  <p>Temperature becomes linear RGB through Tanner Helland's blackbody
+  approximation, normalised so the brightest channel is 1.0 &mdash; the triple
+  carries hue, and brightness is left to <code>energy</code> alone.</p>
+
+  <hr>
+
+  <h2>3 &middot; What was adjusted to make it visible</h2>
+
+  <p>This is the honest part of any data visualisation: the places where the image
+  departs from the data on purpose.</p>
+
+  <h3>Every star is drawn the same size</h3>
+  <p>Real stars are point sources &mdash; all of them, without exception. So a
+  rendered star needs <em>some</em> invented size, and the obvious choice is wrong.</p>
+  <p>The stars sit at their true distances, from 1.3 to 980 parsecs. Give them all
+  the same physical radius and the nearest would appear <strong>740&times;
+  larger</strong> than the farthest, which is a picture of distance, not of
+  brightness. Instead each star's radius scales <em>with</em> its distance:</p>
+  <pre><code>radius = 1.10e-3 radians × distance</code></pre>
+  <p>so every star subtends the same angle &mdash; <strong>5.63 pixels</strong>
+  across, at this panorama's 80.6 arcseconds per pixel. The distance terms then
+  cancel exactly, and how bright a star looks depends only on its magnitude. Which
+  is precisely what apparent magnitude means.</p>
+
+  <h3>The exposure is calibrated, not eyeballed</h3>
+  <p>Emission is scaled so that a magnitude 6.5 star lands around 57/255 &mdash;
+  faint but unmistakably present &mdash; and Sirius saturates. That single constant
+  was set by measuring a crop of the full-resolution render, not by turning a dial
+  until it looked nice.</p>
+
+  <h3>Bloom does the work that pixels can't</h3>
+  <p>A star 1,500&times; brighter than another cannot be shown by pixel value alone;
+  8-bit pixels run out after 255. So the render adds a <strong>Fog Glow</strong>
+  bloom, which spreads the excess brightness outward instead of clipping it &mdash;
+  the same thing your eye and any lens do. It is why the bright stars read as
+  <em>bright</em> rather than merely <em>white</em>. <strong>AgX tone mapping</strong>
+  then compresses the range into 8 bits without flattening the cores.</p>
+
+  <p class="note">Everything else &mdash; position, distance, relative brightness,
+  colour temperature &mdash; is the catalogue's, untouched.</p>
+
+  <hr>
+
+  <h2>4 &middot; How it's framed</h2>
+
+  <p>The projection is <strong>equirectangular</strong>, 2:1: right ascension runs
+  horizontally with 0h at the centre, declination runs linearly up and down, and the
+  north celestial pole is stretched along the top edge.</p>
+
+  <p>Right ascension increases <strong>leftward</strong>, which looks wrong until you
+  think about where you are standing. You are inside the celestial sphere looking
+  out. Making RA run rightward would require a mirrored transform &mdash; a sky
+  reflected east-for-west. Eleven unit tests check this against known star positions,
+  because it is exactly the kind of error that looks fine until an astronomer sees it.</p>
+
+  <p>The viewpoint is the <strong>centre of the Earth on 2000-01-01</strong>, taken
+  from the ephemeris. That is 4.85e-6 parsecs from the Sun, which buys a parallax of
+  at most 0.77 arcseconds against the nearest star &mdash; about 0.005 of a pixel.
+  Correct, and completely invisible. Some things are worth doing properly anyway.</p>
+
+  <p>One artefact worth naming: stars very near the poles get smeared horizontally by
+  the projection. Polaris, at declination +89.26°, is stretched <strong>78&times;</strong>
+  along the top edge. That is the projection being correct, not the render being
+  broken &mdash; the viewer maps it back onto a sphere, where Polaris is round again.</p>
+
+  <hr>
+
+  <h2>5 &middot; How it's rendered</h2>
+
+  <p>Each star is a tiny emissive sphere in Blender, rendered with Cycles at 512
+  samples through an equirectangular panoramic camera, at
+  <strong>16,084 &times; 8,042</strong>. Denoising is switched off: emissive spheres
+  on a black background have nothing to denoise, and it costs two minutes and 41 GB
+  of memory to achieve nothing.</p>
+
+  <p>krpano then slices the equirectangular image into cube-face tiles at five
+  resolutions, which is what lets the viewer above load instantly and stay sharp as
+  you zoom.</p>
+
+  <hr>
+
+  <h2>6 &middot; What this is not</h2>
+
+  <ul>
+    <li><strong>No Milky Way.</strong> The band you see in a real dark sky is
+    unresolved starlight &mdash; stars far too faint for this catalogue. 8,631 stars
+    cannot make it, so it isn't there.</li>
+    <li><strong>No atmosphere, no horizon.</strong> This is the celestial sphere, not
+    the view from a particular field at a particular hour.</li>
+    <li><strong>No proper motion.</strong> Every position is frozen at epoch J2000.</li>
+    <li><strong>No interstellar dust.</strong> Real starlight is dimmed and reddened
+    on its way here; none of that is modelled.</li>
+    <li><strong>Variable stars get one brightness</strong>, the catalogue's, not
+    tonight's.</li>
+    <li><strong>Stars only.</strong> No planets, no Moon, no nebulae, no galaxies.</li>
+  </ul>
+
+  <footer class="sans">
+    Data: <a href="https://github.com/astronexus/HYG-Database">HYG database v4.2</a>
+    (Astronexus). Built with Blender/Cycles, Astropy, krpano and
+    <a href="https://claude.com/claude-code">Claude Code</a>.
+  </footer>
+</main>
+
+<script src="../tour.js"></script>
+<script>
+  embedpano({
+    xml: "../tour.xml",
+    target: "pano",
+    html5: "auto",
+    passQueryParameters: "startscene,startlookat",
+    // The tour was generated with krpano's default skin, which stamps
+    // "Virtual Tour - panosphere_render" over the sky. Switched off through
+    // krpano's own setting rather than by editing tour.xml, so re-tiling
+    // cannot quietly bring the title back. (Keep a copy of this file before
+    // re-tiling though - krpano rewrites this folder.)
+    // krpano grabs the mouse wheel for zoom, which traps the page: scrolling
+    // over the sky zoomed instead of moving down to the article. Handing the
+    // wheel back to the page is what actually fixes the scroll - the 90vh
+    // stage alone only leaves a strip to scroll from. Zoom is still available
+    // via the control bar, double-click, pinch and +/-.
+    vars: {
+      "skin_settings.title": false,
+      "control.mousewheel": false
+    }
+  });
+</script>
+</body>
+</html>
