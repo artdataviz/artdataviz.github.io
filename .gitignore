@@ -49,3 +49,6 @@ Temporary Items
 *.icloud
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,jupyternotebooks
+### Project ###
+# Source material for posts, not part of the published site.
+marketing/

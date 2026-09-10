@@ -380,25 +380,30 @@
 </main>
 
 <script src="tour.js"></script>
+<script src="controlbar.js"></script>
 <script>
   embedpano({
     xml: "tour.xml",
     target: "pano",
     html5: "auto",
     passQueryParameters: "startscene,startlookat",
-    // The tour was generated with krpano's default skin, which stamps
-    // "Virtual Tour - panosphere_render" over the sky. Switched off through
-    // krpano's own setting rather than by editing tour.xml, so re-tiling
-    // cannot quietly bring the title back. (Keep a copy of this file before
-    // re-tiling though - krpano rewrites this folder.)
     // krpano grabs the mouse wheel for zoom, which traps the page: scrolling
     // over the sky zoomed instead of moving down to the article. Handing the
     // wheel back to the page is what actually fixes the scroll - the 90vh
     // stage alone only leaves a strip to scroll from. Zoom is still available
     // via the control bar, double-click, pinch and +/-.
     vars: {
-      "skin_settings.title": false,
       "control.mousewheel": false
+    },
+    // krpano's stock skin is gone from tour.xml - the title stamp, the gyro
+    // and VR buttons piling into one bottom-left slot on phones, and the
+    // sprite-sheet buttons that could not take the page's colours went with
+    // it. The bar is plain DOM now (controlbar.js), mounted on #stage rather
+    // than on krpano's own container so that fullscreen carries the buttons
+    // along with the sky. (Keep a copy of this file before re-tiling - krpano
+    // rewrites this folder and will put the skin back.)
+    onready: function (krpano) {
+      mountControlBar(krpano, document.getElementById("stage"));
     }
   });
 </script>
