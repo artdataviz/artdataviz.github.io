@@ -5,14 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>8,631 stars</title>
 <meta name="description" content="A 360° panorama of the naked-eye sky, built from the HYG star catalogue — and an account of every choice made between the data and the image.">
-<!-- The same page is served from / and from /8631-stars/. Both name the
-     subfolder as the real one, so the duplicate is not indexed twice and
-     the root is free to become an index of projects later. -->
+
+<!-- The page lives at /8631-stars/. The site root is a small redirect page
+     that forwards here (keeping ?con= links), which leaves the root free to
+     become an index of projects later. -->
 <link rel="canonical" href="https://artdataviz.github.io/8631-stars/">
 
-<!-- Open Graph. Both copies advertise the canonical URL and one shared card,
-     so a link to either resolves to the same preview. The card is a real crop
-     of the render (Orion upper right, Sirius lower left), not artwork. -->
+<!-- Open Graph. One shared card: the root's redirect page carries the same
+     tags, so a link to either URL resolves to this preview. The card is a real
+     crop of the render (Orion upper right, Sirius lower left), not artwork. -->
 <meta property="og:title" content="Dataviz · 8,631 stars" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://artdataviz.github.io/8631-stars/" />
@@ -195,6 +196,10 @@
   says it is. Drag the sky to look around.</p>
 </header>
 
+<!-- Constellation chips. Filled by constellations-ui.js from the generated
+     constellations.js; empty (and harmless) without JavaScript. -->
+<nav class="con-strip" id="con-strip" aria-label="Constellations"></nav>
+
 <div id="stage">
   <div id="pano"><noscript style="display:block;padding:2rem;color:#fff">
     This panorama needs JavaScript. The written account is below.</noscript></div>
@@ -376,14 +381,18 @@
     Data: <a href="https://github.com/astronexus/HYG-Database">HYG database v4.2</a>
     (Astronexus). Built with Blender/Cycles, Astropy, krpano and
     <a href="https://claude.com/claude-code">Claude Code</a>.
+    Constellation figures: <a href="https://stellarium.org">Stellarium</a>
+    (modern sky culture).
   </footer>
 </main>
 
-<script src="../tour.js"></script>
-<script src="../controlbar.js"></script>
+<script src="tour.js"></script>
+<script src="controlbar.js"></script>
+<script src="constellations.js"></script>
+<script src="constellations-ui.js"></script>
 <script>
   embedpano({
-    xml: "../tour.xml",
+    xml: "tour.xml",
     target: "pano",
     html5: "auto",
     passQueryParameters: "startscene,startlookat",
@@ -404,6 +413,10 @@
     // rewrites this folder and will put the skin back.)
     onready: function (krpano) {
       mountControlBar(krpano, document.getElementById("stage"));
+      // Chips above the sky; each draws a stick figure and turns the view to
+      // it. ?con=Ori selects one on load. Figures: build_constellations.py.
+      mountConstellations(krpano, document.getElementById("con-strip"),
+                          window.CONSTELLATIONS, document.getElementById("stage"));
     }
   });
 </script>
