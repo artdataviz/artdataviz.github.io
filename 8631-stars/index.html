@@ -361,7 +361,57 @@
 
   <hr>
 
-  <h2>6 &middot; What this is not</h2>
+  <h2>6 &middot; The constellation lines</h2>
+
+  <p>Sixteen constellations can be drawn over the sky: 185 segments between 185
+  stars. They are the one part of this picture that is not measurement &mdash;
+  the stars are where the catalogue puts them, the lines are a human habit laid
+  on top.</p>
+
+  <p><strong>Where the shapes come from.</strong> The figures are Stellarium's
+  <em>modern</em> sky culture, which defines each constellation as chains of
+  Hipparcos catalogue numbers. Every number is resolved through the same HYG
+  file the render used, so each line ends on the catalogue position of a star
+  that is actually drawn.</p>
+
+  <p><strong>Two lines that had to go.</strong> Stellarium's figures reach two
+  stars this panorama never drew, both for the same reason: Hipparcos could not
+  measure a usable parallax for them, so they have no position in space to be
+  placed at. One is HIP&nbsp;33165, a Wolf-Rayet star in Canis Major; the other
+  is Polis, a magnitude 3.84 star in Sagittarius &mdash; bright, famous, and
+  unplaceable. The build drops the segments that reach them rather than draw a
+  line into empty sky, and in both cases the neighbours stay connected through
+  other chains, so the outlines are unchanged.</p>
+
+  <p class="note">The test for this is worth stating, because the obvious
+  version of it is wrong. Asking &ldquo;is this star brighter than the
+  cut?&rdquo; re-derives the rule the catalogue already applied, and it answers
+  yes for Polis. The build instead asks whether the star is <em>in the file the
+  render read</em>. Membership is the rule; anything else is a second
+  opinion.</p>
+
+  <p><strong>The lines stop short of the stars.</strong> Each segment is trimmed
+  by four pixels at both ends, so a star sits in a small clearing instead of
+  being speared by the mark that points at it. Four pixels is a screen
+  measurement while the lines live on a sphere, so the trim is recomputed from
+  the field of view: 0.23&deg; of sky at 78&deg;, 0.10&deg; at 34&deg;, four
+  pixels on screen either way.</p>
+
+  <p><strong>Names.</strong> A star is labelled only if it has an IAU proper
+  name &mdash; Betelgeuse, Rigel, Polaris, Acrux. The rest have Greek-letter
+  designations, kept in <code>datasets/constellations.csv</code>, but putting
+  all of them on the sky buries the figure they belong to.</p>
+
+  <p>The lines are drawn at 80% opacity, which keeps them subordinate to the
+  thing they annotate. Pick a figure from the chips above the sky, or from the
+  badges behind the wand button in the viewer; <code>?con=Ori</code> opens one
+  directly. Every figure star's coordinates &mdash; right ascension,
+  declination, magnitude, and the viewer's own <code>ath</code>/<code>atv</code>
+  &mdash; are in <code>datasets/constellations.csv</code>.</p>
+
+  <hr>
+
+  <h2>7 &middot; What this is not</h2>
 
   <ul>
     <li><strong>No Milky Way.</strong> The band you see in a real dark sky is
@@ -412,11 +462,12 @@
     // along with the sky. (Keep a copy of this file before re-tiling - krpano
     // rewrites this folder and will put the skin back.)
     onready: function (krpano) {
-      mountControlBar(krpano, document.getElementById("stage"));
+      var bar = mountControlBar(krpano, document.getElementById("stage"));
       // Chips above the sky; each draws a stick figure and turns the view to
       // it. ?con=Ori selects one on load. Figures: build_constellations.py.
       mountConstellations(krpano, document.getElementById("con-strip"),
-                          window.CONSTELLATIONS, document.getElementById("stage"));
+                          window.CONSTELLATIONS, document.getElementById("stage"),
+                          bar);
     }
   });
 </script>
