@@ -62,7 +62,7 @@
   /* daisyUI's navbar/navbar-start shape, written in this page's own CSS: one
      icon does not justify loading Tailwind's browser build over a page that
      already ships 300KB of krpano. */
-  .topbar{display:flex; align-items:center;
+  .topbar{display:flex; align-items:center; gap:8px;
     padding:12px max(18px,var(--edge-r)) 0 max(18px,var(--edge-l))}
   .topbar a{display:inline-flex; align-items:center; justify-content:center;
     width:40px; height:40px; border-radius:10px; color:var(--ink-dim);
@@ -71,6 +71,9 @@
   .topbar a:hover{color:var(--accent); border-color:rgba(232,201,138,.45);
     background:rgba(232,201,138,.08)}
   .topbar svg{width:19px; height:19px; fill:currentColor; display:block}
+  .topbar a.home{width:auto; padding:0 14px; text-decoration:none;
+    font:600 12.5px/1 ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    letter-spacing:.08em}
 
   /* ---- page head (outside the pano) ---- */
   .page-head{max-width:44rem; margin:0 auto;
@@ -183,7 +186,8 @@
 
 <div class="hero">
 
-<nav class="topbar" aria-label="Elsewhere">
+<nav class="topbar" aria-label="Site">
+  <a class="home" href="/" title="All posts"><span aria-hidden="true">&larr;&nbsp;</span>artdataviz</a>
   <a href="https://www.linkedin.com/in/alekseyzabelin/" target="_blank" rel="noopener"
      aria-label="Aleksey Zabelin on LinkedIn" title="Aleksey Zabelin on LinkedIn">
     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
