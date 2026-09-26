@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>288 page loads</title>
+<meta name="description" content="One website behind two CDNs, drawn as bars of streaming ones and zeros: why the bars are made of bits, how they move, and how the colours were measured in OKLCH.">
+
+<link rel="canonical" href="https://artdataviz.github.io/generative-dataviz/">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+
+<!-- Open Graph. The card is a crop of the still render (frame 0), not artwork. -->
+<meta property="og:title" content="Dataviz · 288 page loads" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://artdataviz.github.io/generative-dataviz/" />
+<meta property="og:image" content="https://artdataviz.github.io/generative-dataviz/og.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="A dark bar chart built from orange and purple ones and zeros: median page load time for Cloudflare and Amazon CloudFront in London, Dubai, Singapore and Cape Town." />
+<meta property="og:description"
+  content="One website behind two CDNs, drawn as bars of streaming ones and zeros: why the bars are made of bits, how they move, and how the colours were measured in OKLCH." />
+<meta property="og:site_name" content="artdataviz" />
+<meta property="og:locale" content="en_GB" />
+<meta name="twitter:card" content="summary_large_image" />
+<style>
+  /* Same tokens and type as /8631-stars/, so the site reads as one. */
+  :root{
+    --bg:#07080c; --panel:#0d0f16; --ink:#d9dbe3; --ink-dim:#9095a4;
+    --ink-faint:#666c7d; --rule:#1c2030;
+    --accent:#e8c98a;
+    --chart:#232425;       /* the chart's own background */
+    --gutter:0px;
+    --edge-l:max(var(--gutter), env(safe-area-inset-left,  0px));
+    --edge-r:max(var(--gutter), env(safe-area-inset-right, 0px));
+    --edge-b:env(safe-area-inset-bottom, 0px);
+  }
+  @media (max-width:700px){ :root{ --gutter:14px; } }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.7 ui-serif, Georgia, "Iowan Old Style", "Times New Roman", serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .sans{font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+
+  /* ---- top bar: daisyUI's navbar shape in plain CSS, as on /8631-stars/ ---- */
+  .topbar{display:flex; align-items:center;
+    padding:12px max(18px,var(--edge-r)) 0 max(18px,var(--edge-l))}
+  .topbar a{display:inline-flex; align-items:center; justify-content:center;
+    width:40px; height:40px; border-radius:10px; color:var(--ink-dim);
+    background:rgba(255,255,255,.03); border:1px solid var(--rule);
+    transition:color .25s ease, border-color .25s ease, background .25s ease}
+  .topbar a:hover{color:var(--accent); border-color:rgba(232,201,138,.45);
+    background:rgba(232,201,138,.08)}
+  .topbar svg{width:19px; height:19px; fill:currentColor; display:block}
+
+  /* ---- page head ---- */
+  .page-head{max-width:44rem; margin:0 auto;
+    padding:clamp(18px,3.4vw,34px) max(clamp(20px,5vw,32px), var(--edge-r))
+            clamp(14px,2.5vw,20px) max(clamp(20px,5vw,32px), var(--edge-l))}
+  .page-head h1{margin:0; font-size:clamp(26px,5vw,46px); line-height:1.1; letter-spacing:-.02em;
+    font-weight:600; color:#fff}
+  .page-head .sub{margin:.55em 0 0; color:var(--ink-dim);
+    font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:clamp(13.5px,2vw,16px); line-height:1.55}
+
+  /* ---- the loop ---- */
+  .stage{max-width:1200px; margin:0 auto; padding:0 var(--edge-r) 0 var(--edge-l)}
+  .stage figure{margin:0; background:var(--chart); border:1px solid var(--rule);
+    border-radius:12px; overflow:hidden}
+  .stage img{display:block; width:100%; height:auto}
+  .stage figcaption{padding:10px 16px 12px; color:var(--ink-faint); font-size:13px;
+    border-top:1px solid var(--rule); background:var(--panel)}
+
+  .badge-row{display:flex; justify-content:center;
+    padding:clamp(20px,3.5vw,30px) var(--edge-r) 0 var(--edge-l)}
+  .badge{display:inline-flex; align-items:center; gap:.6em; padding:.72em 1.5em; border-radius:999px;
+    font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:12.5px; letter-spacing:.15em; text-transform:uppercase; font-weight:600;
+    color:var(--accent); border:1px solid rgba(232,201,138,.4); background:rgba(232,201,138,.06);
+    box-shadow:0 0 26px rgba(232,201,138,.16), inset 0 0 20px rgba(232,201,138,.05);
+    text-decoration:none; transition:background .3s ease, box-shadow .3s ease}
+  .badge:hover{background:rgba(232,201,138,.13); box-shadow:0 0 36px rgba(232,201,138,.34)}
+
+  /* ---- article ---- */
+  main{max-width:44rem; margin:0 auto;
+       padding:clamp(34px,6vw,72px) max(clamp(20px,5vw,32px), var(--edge-r))
+               calc(96px + var(--edge-b)) max(clamp(20px,5vw,32px), var(--edge-l))}
+  .lede{font-size:clamp(18px,2.6vw,21px); line-height:1.62; color:var(--ink)}
+  h2{font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+     font-size:13px; letter-spacing:.15em; text-transform:uppercase; font-weight:650;
+     color:var(--accent); margin:3.2em 0 .2em}
+  h2 + p{margin-top:.6em}
+  h3{font-size:clamp(19px,3vw,23px); font-weight:600; letter-spacing:-.01em;
+     margin:2.2em 0 .1em; color:#fff}
+  p{margin:1.05em 0}
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid rgba(232,201,138,.35)}
+  a:hover{border-bottom-color:var(--accent)}
+  strong{color:#fff; font-weight:600}
+  hr{border:0; border-top:1px solid var(--rule); margin:3.4em 0}
+  ul, ol{padding-left:1.2em} li{margin:.5em 0}
+  code, pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  code{font-size:.88em; color:var(--accent); background:rgba(232,201,138,.08);
+       padding:.12em .38em; border-radius:4px}
+  pre{background:var(--panel); border:1px solid var(--rule); border-radius:10px;
+      padding:16px 18px; overflow-x:auto; overflow-y:hidden; font-size:14px;
+      line-height:1.6; color:#e3e6ee; -webkit-overflow-scrolling:touch}
+  pre code{background:none; color:inherit; padding:0; font-size:inherit}
+  pre .c{color:var(--ink-faint)}
+  .tablewrap{overflow-x:auto; margin:1.6em 0; border:1px solid var(--rule); border-radius:10px}
+  table{border-collapse:collapse; width:100%; font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif;
+        font-size:14.5px}
+  th,td{padding:11px 14px; text-align:left; border-bottom:1px solid var(--rule); white-space:nowrap}
+  td.wrap{white-space:normal}
+  thead th{color:var(--ink-dim); font-weight:600; font-size:12px; letter-spacing:.09em;
+           text-transform:uppercase; background:var(--panel)}
+  tbody tr:last-child td{border-bottom:0}
+  .num{text-align:right; font-variant-numeric:tabular-nums}
+  .note{border-left:2px solid var(--accent); padding:.1em 0 .1em 1.1em; margin:1.8em 0;
+        color:var(--ink-dim)}
+  /* colour chip beside a hex value */
+  .sw{display:inline-block; width:.95em; height:.95em; border-radius:3px; margin-right:.55em;
+      vertical-align:-.12em; box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+
+  /* ---- pipeline: a row of steps, a column on phones ---- */
+  .flow{display:flex; gap:26px; list-style:none; padding:0; margin:1.6em 0;
+        font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .flow li{position:relative; flex:1 1 0; margin:0; padding:.6em .75em;
+           background:var(--panel); border:1px solid var(--rule); border-radius:10px;
+           font-size:13.5px; line-height:1.35}
+  .flow li b{display:block; color:#fff; font-weight:600}
+  .flow li span{display:block; margin-top:.25em; color:var(--ink-dim); font-size:12.5px}
+  .flow li + li::before{content:"\2192"; position:absolute; left:-19px; top:50%;
+           transform:translateY(-50%); color:var(--accent)}
+  @media (max-width:600px){
+    .flow{flex-direction:column; gap:22px}
+    .flow li + li::before{content:"\2193"; left:1em; top:-20px; transform:none}
+  }
+  footer{border-top:1px solid var(--rule); margin-top:4em; padding-top:1.6em;
+         color:var(--ink-faint); font-size:14px}
+  footer a{color:var(--ink-dim); border-bottom-color:var(--rule)}
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="Elsewhere">
+  <a href="https://www.linkedin.com/in/alekseyzabelin/" target="_blank" rel="noopener"
+     aria-label="Aleksey Zabelin on LinkedIn" title="Aleksey Zabelin on LinkedIn">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
+  </a>
+</nav>
+
+<header class="page-head">
+  <h1>Dataviz &middot; 288 page loads</h1>
+  <p class="sub">One website behind two CDNs, timed from four cities in May 2024.
+  Every bar is a column of ones and zeros: the bits move, the heights don't.</p>
+</header>
+
+<div class="stage">
+  <figure>
+    <!-- Reduced motion gets the still; everyone else gets the 8.6 s loop. -->
+    <picture>
+      <source media="(prefers-reduced-motion: reduce)" srcset="binary_bars.png">
+      <img src="binary_bars.gif" width="1200" height="720"
+           alt="Bar chart of median Largest Contentful Paint. Cloudflare against Amazon CloudFront: London 3,049 ms against 2,653; Dubai 3,387 against 2,123; Singapore 4,449 against 2,912; Cape Town 4,915 against 2,818. Each bar is a column of orange or purple ones and zeros that stream downward.">
+    </picture>
+    <figcaption class="sans">Median Largest Contentful Paint per city. Dotted lines:
+    Google's 2,500 ms and 4,000 ms thresholds. The numbers are in the table in section 1.</figcaption>
+  </figure>
+</div>
+
+<div class="badge-row">
+  <a class="badge" href="#article">Read how it was made &darr;</a>
+</div>
+
+<main id="article">
+
+  <p class="lede">I found this chart while cleaning my laptop: a generative-dataviz
+  experiment from May 2024. It compares one website served two ways, through
+  Amazon CloudFront and through Cloudflare, each on its default settings.</p>
+
+  <p>This page is about the chart: why the bars are made of bits, how they move,
+  and how the colours were measured. The experiment behind it gets one section.</p>
+
+  <hr>
+
+  <h2>1 &middot; The data, at a glance</h2>
+
+  <p>A client's virtual-tour site, deployed twice: one copy behind
+  <strong>Amazon CloudFront</strong>, one behind <strong>Cloudflare</strong>, both
+  on default settings. Both delivered the same page: a median 3.34 MB in 78
+  requests.</p>
+
+  <p>On 16 May 2024, WebPageTest loaded 4 tours from 4 cities through both CDNs,
+  9 times each: <strong>288 page loads</strong> in desktop Chrome, on a 5 Mbps
+  cable profile, with an empty cache every time.</p>
+
+  <ol class="flow" aria-label="Pipeline">
+    <li><b>WebPageTest API</b><span>32 tests &times; 9 runs</span></li>
+    <li><b>Python</b><span>requests, pandas</span></li>
+    <li><b>32 CSVs</b><span>288 loads</span></li>
+    <li><b>Medians</b><span>262 loads with an LCP</span></li>
+    <li><b>Chart</b><span>8 bars</span></li>
+  </ol>
+
+  <p>Each bar is a median of Largest Contentful Paint (LCP): the time until the
+  largest element on the page appears.</p>
+
+  <div class="tablewrap"><table>
+    <thead><tr><th>City</th><th class="num">CloudFront, ms</th><th class="num">Cloudflare, ms</th>
+      <th class="num">Gap, ms</th><th class="num">Ratio</th></tr></thead>
+    <tbody>
+      <tr><td>London</td><td class="num">2,653</td><td class="num">3,049</td><td class="num">+396</td><td class="num">1.15&times;</td></tr>
+      <tr><td>Dubai</td><td class="num">2,123</td><td class="num">3,387</td><td class="num">+1,264</td><td class="num">1.60&times;</td></tr>
+      <tr><td>Singapore</td><td class="num">2,912</td><td class="num">4,449</td><td class="num">+1,538</td><td class="num">1.53&times;</td></tr>
+      <tr><td>Cape Town</td><td class="num">2,818</td><td class="num">4,915</td><td class="num">+2,097</td><td class="num">1.74&times;</td></tr>
+    </tbody>
+  </table></div>
+
+  <p>The gap starts at the first byte: CloudFront answered in 202&ndash;238 ms in
+  every city, Cloudflare in 271&ndash;906 ms. One configuration, one day, lab
+  data: not a verdict on either CDN.</p>
+
+  <hr>
+
+  <h2>2 &middot; Why the bars are made of bits</h2>
+
+  <p>Height carries the value, as in any bar chart. Colour carries the CDN. The
+  bits carry no data, but they are not random decoration: the test measured how
+  long a page's bits take to cross the internet, so the bars are built from
+  bits.</p>
+
+  <p>As texture, they make the bars breathe. Bits stream down, flash and fade
+  like data in transit, while the heights hold still.</p>
+
+  <p><strong>Generative, within rules.</strong> Chance draws the bits, and four
+  rules limit it:</p>
+  <ul>
+    <li><strong>Five characters per row</strong>, each a <code>1</code>, a
+      <code>0</code> or a space.</li>
+    <li><strong>The top row is always solid.</strong> It never gets a space, so
+      each bar's exact height reads at a glance.</li>
+    <li><strong>Below it, spaces fall by probability:</strong> 4 in 25 on the
+      bottom row, 12 in 35 in the body. The base stays denser than the body.</li>
+    <li><strong>Opacity is random too.</strong> 70% of bits sit at full opacity,
+      the rest at 57&ndash;100%.</li>
+  </ul>
+
+  <p>Every render draws new bits, and the heights never move; the published loop
+  fixes seed 2024.</p>
+
+
+  <p><strong>One row = 77 ms.</strong> The number is an artistic choice. At 77 ms
+  per row, every row of bits stays visible, and the glyphs are big enough to read
+  and small enough to keep precision. Rows round down, so a bar can sit up to
+  76 ms short of its median. The smallest gap in the chart is 396 ms, so rounding
+  never flips a comparison.</p>
+
+  <hr>
+
+  <h2>3 &middot; How it moves</h2>
+
+  <p>The heights stay fixed, so every frame is a correct chart. The bits stream
+  down inside the bars.</p>
+
+  <p><strong>A looping tape per column of bits.</strong> Row <code>r</code> at
+  frame <code>f</code> shows tape cell <code>r + f // speed</code>. One step
+  later, every cell sits one row lower.</p>
+
+<pre><code>r = np.arange(n_rows - 1)[:, None]               <span class="c"># body rows, bottom first</span>
+idx = (r + f // speeds) % (frames // speeds)     <span class="c"># one row down per speed step</span></code></pre>
+
+  <p><strong>Three speeds.</strong> Each column steps one row every 2, 4 or 6
+  frames, picked at random. 192 frames divide by all three, so the last frame
+  runs into the first: an 8.6 s loop at 22.4 fps.</p>
+
+  <p><strong>The top row stays put.</strong> Its bits flip twice per loop, and it
+  never blanks or fades, so the edge that carries the value holds still.</p>
+
+  <p><strong>Sparkle.</strong> At any frame, 5.6% of bits are mid-flash. A flash
+  lasts 0.22 s, lifts opacity to 100% and pales the colour 60% toward white. It
+  rides down with its bit.</p>
+
+  <p><strong>Dissolve.</strong> At any frame, 5% of bits are mid-fade. A fade
+  lasts 1.4 s and bottoms out at 10% of the bit's opacity.</p>
+
+  <p class="note">39 tests hold the rules in place. Among them: bar height is the
+  same in every frame, the top row never blanks, and sparkle and dissolve hit
+  their rates.</p>
+
+  <hr>
+
+  <h2>4 &middot; Colour, measured</h2>
+
+  <p>The hues come from the two logos: Cloudflare orange and CloudFront purple.
+  The lightness comes from a measurement.</p>
+
+  <p>In 2024 I picked <code>#E5873B</code> and <code>#895FEE</code> by eye.
+  Measured in OKLCH, they sat at lightness 0.71 and 0.60. The purple was darker,
+  so CloudFront, the faster CDN, looked dimmer as well as shorter: the colour
+  argued against the data.</p>
+
+  <p>The fix kept the purple's hue, 293&deg;, and lifted its lightness to 0.71:
+  <code>#A68BFE</code>. Now neither CDN reads louder, and only height
+  differs.</p>
+
+  <p><strong>Why OKLCH, not HSL.</strong> OKLCH is built so that equal L looks
+  equally light. HSL is not: it rates the orange at 57% and the new purple at
+  77%, while OKLCH rates both 0.71.</p>
+
+  <div class="tablewrap"><table>
+    <thead><tr><th>Role</th><th>Colour</th><th class="num">L</th><th class="num">C</th><th class="num">Hue</th></tr></thead>
+    <tbody>
+      <tr><td>Cloudflare bars</td><td><span class="sw" style="background:#E5873B"></span><code>#E5873B</code></td><td class="num">0.71</td><td class="num">0.145</td><td class="num">56&deg;</td></tr>
+      <tr><td>CloudFront bars, 2024</td><td><span class="sw" style="background:#895FEE"></span><code>#895FEE</code></td><td class="num">0.60</td><td class="num">0.205</td><td class="num">293&deg;</td></tr>
+      <tr><td>CloudFront bars, now</td><td><span class="sw" style="background:#A68BFE"></span><code>#A68BFE</code></td><td class="num">0.71</td><td class="num">0.164</td><td class="num">293&deg;</td></tr>
+      <tr><td>&ldquo;good&rdquo; line</td><td><span class="sw" style="background:#719D00"></span><code>#719D00</code></td><td class="num">0.64</td><td class="num">0.165</td><td class="num">127&deg;</td></tr>
+      <tr><td>&ldquo;poor&rdquo; line</td><td><span class="sw" style="background:#DE5D4D"></span><code>#DE5D4D</code></td><td class="num">0.64</td><td class="num">0.165</td><td class="num">30&deg;</td></tr>
+      <tr><td>Background</td><td><span class="sw" style="background:#232425"></span><code>#232425</code></td><td class="num">0.26</td><td class="num">0.002</td><td class="num">&ndash;</td></tr>
+    </tbody>
+  </table></div>
+
+  <p><strong>Threshold lines follow the same rule.</strong> Google grades LCP in
+  three bands: good up to 2,500 ms, needs improvement up to 4,000 ms, poor above.
+  The chart draws both borders.</p>
+
+  <p>Until this version, lime <code>#ADE63C</code> and red <code>#E64D3C</code> at
+  80% opacity measured L 0.75 and 0.56 on the background: the &ldquo;good&rdquo;
+  line shone brighter than the bars, and the two lines didn't match. Now both
+  sit at L 0.64 and chroma 0.165: equal to each other, and a step behind the
+  bars. Reference lines frame the data; they shouldn't outshine it.</p>
+
+  <h3>How to do it in production</h3>
+  <ul>
+    <li><strong>CSS</strong> takes OKLCH directly in every current browser:
+      <code>color: oklch(0.71 0.164 292.5)</code>. Give every series the same L.</li>
+    <li><strong>Python:</strong> <a href="https://facelessuser.github.io/coloraide/">coloraide</a>
+      converts, adjusts and fits the result back into sRGB.</li>
+    <li><strong>By eye:</strong> <a href="https://oklch.com">oklch.com</a> shows
+      which chroma still fits the screen gamut at a given lightness.</li>
+    <li><strong>Check colour blindness after.</strong> About 1 in 12 men sees
+      colour differently, most often mixing up reds and greens. Matched lightness
+      takes away the brightness cue, so hue alone has to keep the bars apart. A
+      simulator shows the pair as those eyes see it, and &Delta;E measures how far
+      apart the two colours look: 0 is identical, 8 is the usual minimum for chart
+      colours. Orange and purple score 27 for red-blind and green-blind vision:
+      still easy to tell apart.</li>
+  </ul>
+
+<pre><code>from coloraide import Color                        <span class="c"># pip install coloraide</span>
+
+purple = Color('#895FEE').convert('oklch')         <span class="c"># L 0.60, C 0.205, h 292.7</span>
+purple['lightness'] = 0.71                          <span class="c"># match the orange</span>
+purple.convert('srgb').fit().to_string(hex=True)    <span class="c"># '#a68aff', one step off #A68BFE</span></code></pre>
+
+  <hr>
+
+  <h2>5 &middot; Layout</h2>
+
+  <ul>
+    <li><strong>Labels turn a number into a judgement.</strong> A line alone says
+      2,500. The label says what it means: &ldquo;good&rdquo; with &darr;, since good
+      loads fall below the line, and &ldquo;poor&rdquo; with &uarr;. The words carry
+      the meaning, so red against green is never the only cue.</li>
+    <li><strong>Bars cut the lines.</strong> A background panel behind each bar
+      breaks a line where a bar stands. Dots never cross the digits, and every bar
+      keeps a clean edge.</li>
+    <li><strong>Order sets the direction.</strong> Cities are sorted by the
+      Cloudflare median, 3.0 s to 4.9 s. The orange bars climb left to right, the
+      purple ones stay under 3 s, and the gap widens at every step: +396, +1,264,
+      +1,538, +2,097 ms. The chart reads as one movement, not four separate
+      comparisons.</li>
+    <li><strong>The subtitle is the legend.</strong> &ldquo;&#9679; Cloudflare vs
+      &#9679; Amazon CloudFront&rdquo; names the comparison and keys the colours in
+      one line. No legend box sits in the plot, so the space stays with the
+      data.</li>
+    <li><strong>Text stays neutral.</strong> Labels are white at 70%, names in
+      title ink. Only the dots and the bits wear the CDN colours.</li>
+  </ul>
+
+  <hr>
+
+  <h2>6 &middot; Make your own</h2>
+
+  <p>The <a href="https://github.com/artdataviz/artdataviz.github.io/tree/main/generative-dataviz/generator">generator</a>
+  takes a CSV of category, group and value, and writes a PNG, an MP4 and a GIF.
+  It needs Python 3.10+ and ffmpeg.</p>
+
+<pre><code>python binary_bars.py lcp_medians.csv --out chart --row-value 77 \
+    --hline '2500:#719D00:good:down' --hline '4000:#DE5D4D:poor:up'</code></pre>
+
+  <p><strong>Reuse.</strong> The chart, the animation, this text and the data are
+  under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>:
+  share and adapt them, commercially too, if you credit the author and link to
+  this page. The code is under the
+  <a href="https://github.com/artdataviz/artdataviz.github.io/blob/main/generative-dataviz/generator/LICENSE">MIT licence</a>.
+  Credit line:</p>
+
+<pre><code>Aleksey Zabelin, "288 page loads", artdataviz.github.io/generative-dataviz, CC BY 4.0</code></pre>
+
+  <footer class="sans">
+    Data: <a href="https://www.webpagetest.org">WebPageTest</a>, 16 May 2024,
+    288 page loads (<a href="https://github.com/artdataviz/artdataviz.github.io/tree/main/generative-dataviz/generator">CSV and code</a>).
+    Built with Python, pandas, matplotlib, ffmpeg and
+    <a href="https://claude.com/claude-code">Claude Code</a>.
+    &copy; Aleksey Zabelin. Text, chart and data:
+    <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; code: MIT.
+  </footer>
+</main>
+</body>
+</html>
