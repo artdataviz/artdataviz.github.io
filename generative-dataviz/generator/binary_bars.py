@@ -10,7 +10,8 @@ last frame runs into the first without a seam.
         --hline '2500:#719D00:good:down' --hline '4000:#DE5D4D:poor:up'
 
 Input: a CSV with columns category, group, value; one row per bar, in the
-order you want them drawn. The subtitle is the legend: each group's name after
+order you want them drawn. --glyphs swaps the ones and zeros for two symbols
+that suit the data, e.g. --glyphs zZ for sleep. The subtitle is the legend: each group's name after
 a dot in its colour. Output: <out>.png (still), <out>.mp4, <out>.gif;
 with --still-only, <out>.png and <out>.svg.
 Needs matplotlib, numpy, pandas and ffmpeg on PATH.
@@ -186,10 +187,15 @@ class Style:
     ink: str = '#EEEEEE'
     ink_dim: str = '#AAAAAA'
     figsize: tuple = (10, 6)
+    glyphs: str = '10'                      # symbols shown for a 1 bit and a 0 bit; a space is a gap
     glyph_size: float = 4.5                 # pt
     glyph_step: float = 0.034               # x distance between glyph columns
     bar_pitch: float = 0.234                # x distance between bars in one category
     category_step: float = 1.25
+
+    def __post_init__(self):
+        if len(self.glyphs) != 2 or any(g.isspace() for g in self.glyphs):
+            raise ValueError(f'glyphs takes two visible characters, e.g. "10" or "zZ", not {self.glyphs!r}')
 
     def rc(self):
         return {
@@ -242,6 +248,7 @@ class Chart:
         if values.shape[1] > len(style.colors):
             raise ValueError(f'{values.shape[1]} groups but {len(style.colors)} colours')
         self.motion = motion
+        self.glyph_map = str.maketrans('10', style.glyphs)
         self.fig, ax = plt.subplots(figsize=style.figsize)
         self.ax = ax
         x = np.arange(values.shape[0]) * style.category_step
@@ -303,7 +310,7 @@ class Chart:
             rgb_now = rgb + (1 - rgb) * self.motion.whiten * state.sparkle[..., None]
             for r, row in enumerate(texts):
                 for c, text in enumerate(row):
-                    text.set_text(state.chars[r, c])
+                    text.set_text(state.chars[r, c].translate(self.glyph_map))
                     text.set_color((*rgb_now[r, c], state.alpha[r, c]))
 
 
@@ -372,6 +379,8 @@ def main(argv=None):
     p.add_argument('--hline', action='append', default=[], metavar='VALUE:COLOR[:LABEL[:up|down]]',
                    help='reference line with a y tick, an optional label and arrow; repeatable')
     p.add_argument('--line-style', choices=sorted(LINE_STYLES), default=Style.line_style)
+    p.add_argument('--glyphs', default=Style.glyphs,
+                   help='two symbols that stand in for 1 and 0, e.g. zZ for sleep or $+ for sales')
     p.add_argument('--still-only', action='store_true', help='write <out>.png and <out>.svg only')
     p.add_argument('--row-value', type=float, help='data units per glyph row (default: tallest bar = 63 rows)')
     p.add_argument('--seed', type=int, help='fix the bits; omit for new bits on every run')
@@ -383,6 +392,7 @@ def main(argv=None):
         title=args.title, xlabel=args.xlabel, ylabel=args.ylabel,
         hlines=tuple((float(v), *rest) for v, *rest in (h.split(':', 3) for h in args.hline)),
         line_style=args.line_style,
+        glyphs=args.glyphs,
         **({'colors': tuple(args.colors.split(','))} if args.colors else {}),
     )
     motion = Motion(frames=args.frames, fps=args.fps)
