@@ -349,10 +349,11 @@ purple.convert('srgb').fit().to_string(hex=True)    <span class="c"># '#a68aff',
   it, one layer above the lines, so the dots stop where a bar starts and never
   run across the digits.</p>
 
-  <p>The cities are sorted by the Cloudflare median, from 3.0 s to 4.9 s. The
-  orange bars climb from left to right, the purple ones stay under 3 s, and the
-  gap between them grows at every step: +396, +1,264, +1,538, +2,097 ms. You read
-  the chart as one movement instead of four separate comparisons.</p>
+  <p>The cities are sorted from the smallest orange bar to the biggest, so the
+  bars climb in a diagonal across the chart. That's a composition choice more
+  than a data one. A diagonal gives the eye a direction, left to right. The
+  purple bars stay low, so the gap between the two grows along the way, and you
+  read the chart as one movement instead of four separate comparisons.</p>
 
   <p>There's no legend box. The subtitle does that job: &ldquo;&#9679; Cloudflare
   vs &#9679; Amazon CloudFront&rdquo;, each dot in its bar colour. It names the
