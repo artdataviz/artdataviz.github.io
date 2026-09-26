@@ -1,0 +1,289 @@
+cdn,city,tour,run,lcp_ms,speed_index_ms,ttfb_ms
+Amazon CloudFront,Cape Town,A,1,4738.0,5723.0,829
+Amazon CloudFront,Cape Town,A,2,2291.0,3107.0,202
+Amazon CloudFront,Cape Town,A,3,2568.0,3777.0,202
+Amazon CloudFront,Cape Town,A,4,2478.0,3486.0,201
+Amazon CloudFront,Cape Town,A,5,,3265.0,200
+Amazon CloudFront,Cape Town,A,6,2470.0,3864.0,204
+Amazon CloudFront,Cape Town,A,7,2519.0,2537.0,200
+Amazon CloudFront,Cape Town,A,8,2780.0,4296.0,322
+Amazon CloudFront,Cape Town,A,9,2609.0,3619.0,198
+Amazon CloudFront,Cape Town,B,1,3319.0,4291.0,794
+Amazon CloudFront,Cape Town,B,2,2929.0,2914.0,208
+Amazon CloudFront,Cape Town,B,3,2921.0,2673.0,203
+Amazon CloudFront,Cape Town,B,4,2862.0,3774.0,200
+Amazon CloudFront,Cape Town,B,5,2808.0,3266.0,202
+Amazon CloudFront,Cape Town,B,6,2696.0,3378.0,202
+Amazon CloudFront,Cape Town,B,7,2863.0,2632.0,203
+Amazon CloudFront,Cape Town,B,8,2818.0,2561.0,201
+Amazon CloudFront,Cape Town,B,9,2957.0,3270.0,203
+Amazon CloudFront,Cape Town,C,1,3117.0,3068.0,777
+Amazon CloudFront,Cape Town,C,2,2445.0,3439.0,201
+Amazon CloudFront,Cape Town,C,3,2587.0,3503.0,207
+Amazon CloudFront,Cape Town,C,4,2487.0,2811.0,210
+Amazon CloudFront,Cape Town,C,5,2580.0,2726.0,204
+Amazon CloudFront,Cape Town,C,6,2553.0,3249.0,204
+Amazon CloudFront,Cape Town,C,7,2527.0,2908.0,203
+Amazon CloudFront,Cape Town,C,8,2489.0,3430.0,201
+Amazon CloudFront,Cape Town,C,9,2528.0,3285.0,205
+Amazon CloudFront,Cape Town,D,1,6072.0,6773.0,526
+Amazon CloudFront,Cape Town,D,2,4547.0,5252.0,204
+Amazon CloudFront,Cape Town,D,3,4466.0,5284.0,198
+Amazon CloudFront,Cape Town,D,4,4582.0,4703.0,202
+Amazon CloudFront,Cape Town,D,5,4483.0,5484.0,202
+Amazon CloudFront,Cape Town,D,6,4734.0,4807.0,199
+Amazon CloudFront,Cape Town,D,7,4463.0,5356.0,204
+Amazon CloudFront,Cape Town,D,8,4486.0,5551.0,201
+Amazon CloudFront,Cape Town,D,9,4659.0,4841.0,202
+Amazon CloudFront,Dubai,A,1,5039.0,5619.0,909
+Amazon CloudFront,Dubai,A,2,2042.0,2647.0,240
+Amazon CloudFront,Dubai,A,3,1905.0,2676.0,235
+Amazon CloudFront,Dubai,A,4,,2700.0,230
+Amazon CloudFront,Dubai,A,5,1964.0,2573.0,238
+Amazon CloudFront,Dubai,A,6,,,234
+Amazon CloudFront,Dubai,A,7,2083.0,2734.0,238
+Amazon CloudFront,Dubai,A,8,2071.0,2734.0,244
+Amazon CloudFront,Dubai,A,9,1858.0,,216
+Amazon CloudFront,Dubai,B,1,3562.0,3719.0,923
+Amazon CloudFront,Dubai,B,2,2143.0,2159.0,249
+Amazon CloudFront,Dubai,B,3,2078.0,2244.0,325
+Amazon CloudFront,Dubai,B,4,,2306.0,206
+Amazon CloudFront,Dubai,B,5,2136.0,2233.0,204
+Amazon CloudFront,Dubai,B,6,2149.0,2247.0,324
+Amazon CloudFront,Dubai,B,7,2137.0,2298.0,209
+Amazon CloudFront,Dubai,B,8,2152.0,2320.0,330
+Amazon CloudFront,Dubai,B,9,2121.0,2256.0,329
+Amazon CloudFront,Dubai,C,1,3517.0,3798.0,902
+Amazon CloudFront,Dubai,C,2,2044.0,2204.0,206
+Amazon CloudFront,Dubai,C,3,2036.0,2216.0,208
+Amazon CloudFront,Dubai,C,4,,2196.0,205
+Amazon CloudFront,Dubai,C,5,2057.0,2343.0,200
+Amazon CloudFront,Dubai,C,6,2142.0,2316.0,247
+Amazon CloudFront,Dubai,C,7,2123.0,2312.0,252
+Amazon CloudFront,Dubai,C,8,2059.0,2226.0,236
+Amazon CloudFront,Dubai,C,9,2060.0,2294.0,207
+Amazon CloudFront,Dubai,D,1,7847.0,8171.0,838
+Amazon CloudFront,Dubai,D,2,6456.0,6951.0,228
+Amazon CloudFront,Dubai,D,3,6348.0,6840.0,228
+Amazon CloudFront,Dubai,D,4,,6859.0,249
+Amazon CloudFront,Dubai,D,5,6476.0,6854.0,215
+Amazon CloudFront,Dubai,D,6,,6867.0,251
+Amazon CloudFront,Dubai,D,7,,6950.0,204
+Amazon CloudFront,Dubai,D,8,,5938.0,267
+Amazon CloudFront,Dubai,D,9,,6924.0,320
+Amazon CloudFront,London,A,1,2535.0,3504.0,313
+Amazon CloudFront,London,A,2,2462.0,4045.0,216
+Amazon CloudFront,London,A,3,2633.0,2771.0,205
+Amazon CloudFront,London,A,4,2460.0,3467.0,201
+Amazon CloudFront,London,A,5,2461.0,3407.0,209
+Amazon CloudFront,London,A,6,2593.0,3803.0,206
+Amazon CloudFront,London,A,7,2587.0,3450.0,207
+Amazon CloudFront,London,A,8,2438.0,3597.0,202
+Amazon CloudFront,London,A,9,2548.0,3513.0,207
+Amazon CloudFront,London,B,1,2669.0,3689.0,274
+Amazon CloudFront,London,B,2,2882.0,3771.0,214
+Amazon CloudFront,London,B,3,2933.0,2874.0,208
+Amazon CloudFront,London,B,4,2855.0,3414.0,206
+Amazon CloudFront,London,B,5,2723.0,3220.0,205
+Amazon CloudFront,London,B,6,2761.0,3767.0,207
+Amazon CloudFront,London,B,7,2755.0,3318.0,209
+Amazon CloudFront,London,B,8,2817.0,3555.0,203
+Amazon CloudFront,London,B,9,2821.0,3731.0,205
+Amazon CloudFront,London,C,1,2628.0,3296.0,244
+Amazon CloudFront,London,C,2,2637.0,2895.0,204
+Amazon CloudFront,London,C,3,2423.0,3044.0,204
+Amazon CloudFront,London,C,4,2503.0,2823.0,205
+Amazon CloudFront,London,C,5,2545.0,3193.0,203
+Amazon CloudFront,London,C,6,2449.0,3398.0,205
+Amazon CloudFront,London,C,7,2475.0,3087.0,205
+Amazon CloudFront,London,C,8,2329.0,3375.0,208
+Amazon CloudFront,London,C,9,2412.0,3252.0,204
+Amazon CloudFront,London,D,1,3240.0,3993.0,261
+Amazon CloudFront,London,D,2,3492.0,3303.0,209
+Amazon CloudFront,London,D,3,3259.0,4224.0,202
+Amazon CloudFront,London,D,4,3123.0,3784.0,202
+Amazon CloudFront,London,D,5,3246.0,3910.0,201
+Amazon CloudFront,London,D,6,3347.0,4421.0,203
+Amazon CloudFront,London,D,7,3358.0,3203.0,205
+Amazon CloudFront,London,D,8,3286.0,3213.0,205
+Amazon CloudFront,London,D,9,3258.0,4000.0,201
+Amazon CloudFront,Singapore,A,1,5864.0,6756.0,584
+Amazon CloudFront,Singapore,A,2,6272.0,6579.0,1019
+Amazon CloudFront,Singapore,A,3,5839.0,7484.0,569
+Amazon CloudFront,Singapore,A,4,5105.0,5849.0,242
+Amazon CloudFront,Singapore,A,5,4661.0,5038.0,214
+Amazon CloudFront,Singapore,A,6,4058.0,5634.0,201
+Amazon CloudFront,Singapore,A,7,2573.0,3250.0,204
+Amazon CloudFront,Singapore,A,8,2543.0,3877.0,202
+Amazon CloudFront,Singapore,A,9,2593.0,2680.0,206
+Amazon CloudFront,Singapore,B,1,3957.0,4113.0,776
+Amazon CloudFront,Singapore,B,2,2687.0,3548.0,210
+Amazon CloudFront,Singapore,B,3,2729.0,3507.0,204
+Amazon CloudFront,Singapore,B,4,2663.0,2478.0,204
+Amazon CloudFront,Singapore,B,5,2883.0,3050.0,203
+Amazon CloudFront,Singapore,B,6,2940.0,3728.0,208
+Amazon CloudFront,Singapore,B,7,2851.0,2822.0,206
+Amazon CloudFront,Singapore,B,8,2779.0,3634.0,199
+Amazon CloudFront,Singapore,B,9,2746.0,3421.0,203
+Amazon CloudFront,Singapore,C,1,4320.0,4906.0,963
+Amazon CloudFront,Singapore,C,2,2528.0,3208.0,204
+Amazon CloudFront,Singapore,C,3,2583.0,3230.0,203
+Amazon CloudFront,Singapore,C,4,2557.0,2456.0,202
+Amazon CloudFront,Singapore,C,5,2538.0,2304.0,208
+Amazon CloudFront,Singapore,C,6,2432.0,3013.0,199
+Amazon CloudFront,Singapore,C,7,2510.0,2805.0,200
+Amazon CloudFront,Singapore,C,8,2486.0,3152.0,200
+Amazon CloudFront,Singapore,C,9,2578.0,3330.0,202
+Amazon CloudFront,Singapore,D,1,5230.0,6160.0,817
+Amazon CloudFront,Singapore,D,2,3066.0,4107.0,206
+Amazon CloudFront,Singapore,D,3,3244.0,3906.0,201
+Amazon CloudFront,Singapore,D,4,3358.0,4180.0,199
+Amazon CloudFront,Singapore,D,5,3270.0,4255.0,204
+Amazon CloudFront,Singapore,D,6,3289.0,4463.0,203
+Amazon CloudFront,Singapore,D,7,3259.0,3066.0,204
+Amazon CloudFront,Singapore,D,8,3250.0,4161.0,201
+Amazon CloudFront,Singapore,D,9,3157.0,4248.0,199
+Cloudflare,Cape Town,A,1,5144.0,6045.0,724
+Cloudflare,Cape Town,A,2,5022.0,6101.0,844
+Cloudflare,Cape Town,A,3,4965.0,5117.0,693
+Cloudflare,Cape Town,A,4,4842.0,5754.0,827
+Cloudflare,Cape Town,A,5,4620.0,6035.0,656
+Cloudflare,Cape Town,A,6,4635.0,5607.0,655
+Cloudflare,Cape Town,A,7,4551.0,5604.0,634
+Cloudflare,Cape Town,A,8,4731.0,5049.0,657
+Cloudflare,Cape Town,A,9,4619.0,5764.0,639
+Cloudflare,Cape Town,B,1,4786.0,5408.0,690
+Cloudflare,Cape Town,B,2,5372.0,6035.0,767
+Cloudflare,Cape Town,B,3,4915.0,5151.0,637
+Cloudflare,Cape Town,B,4,5024.0,5855.0,676
+Cloudflare,Cape Town,B,5,4896.0,5857.0,683
+Cloudflare,Cape Town,B,6,4828.0,5473.0,647
+Cloudflare,Cape Town,B,7,4787.0,4998.0,645
+Cloudflare,Cape Town,B,8,5045.0,5815.0,793
+Cloudflare,Cape Town,B,9,4975.0,5620.0,648
+Cloudflare,Cape Town,C,1,,4629.0,692
+Cloudflare,Cape Town,C,2,4529.0,4678.0,685
+Cloudflare,Cape Town,C,3,4594.0,4965.0,648
+Cloudflare,Cape Town,C,4,4536.0,5389.0,644
+Cloudflare,Cape Town,C,5,4605.0,5001.0,646
+Cloudflare,Cape Town,C,6,5063.0,5668.0,701
+Cloudflare,Cape Town,C,7,4800.0,4455.0,652
+Cloudflare,Cape Town,C,8,4560.0,4708.0,687
+Cloudflare,Cape Town,C,9,4543.0,4845.0,653
+Cloudflare,Cape Town,D,1,5736.0,5882.0,700
+Cloudflare,Cape Town,D,2,5821.0,6821.0,824
+Cloudflare,Cape Town,D,3,5781.0,5891.0,646
+Cloudflare,Cape Town,D,4,5902.0,6132.0,708
+Cloudflare,Cape Town,D,5,5764.0,6658.0,657
+Cloudflare,Cape Town,D,6,5662.0,6320.0,666
+Cloudflare,Cape Town,D,7,5678.0,5848.0,677
+Cloudflare,Cape Town,D,8,5705.0,5660.0,658
+Cloudflare,Cape Town,D,9,5708.0,6473.0,650
+Cloudflare,Dubai,A,1,4771.0,5458.0,336
+Cloudflare,Dubai,A,2,,5658.0,323
+Cloudflare,Dubai,A,3,3272.0,3952.0,932
+Cloudflare,Dubai,A,4,3371.0,4031.0,692
+Cloudflare,Dubai,A,5,,5428.0,689
+Cloudflare,Dubai,A,6,3260.0,3757.0,828
+Cloudflare,Dubai,A,7,3051.0,3791.0,586
+Cloudflare,Dubai,A,8,,3454.0,513
+Cloudflare,Dubai,A,9,2905.0,3649.0,590
+Cloudflare,Dubai,B,1,,4565.0,683
+Cloudflare,Dubai,B,2,,3705.0,798
+Cloudflare,Dubai,B,3,3242.0,3319.0,628
+Cloudflare,Dubai,B,4,,3234.0,658
+Cloudflare,Dubai,B,5,3057.0,3224.0,323
+Cloudflare,Dubai,B,6,3256.0,3438.0,638
+Cloudflare,Dubai,B,7,4835.0,4991.0,599
+Cloudflare,Dubai,B,8,3156.0,3218.0,533
+Cloudflare,Dubai,B,9,,3224.0,560
+Cloudflare,Dubai,C,1,3582.0,3874.0,706
+Cloudflare,Dubai,C,2,4925.0,5213.0,650
+Cloudflare,Dubai,C,3,,3964.0,320
+Cloudflare,Dubai,C,4,3469.0,3690.0,317
+Cloudflare,Dubai,C,5,3390.0,3587.0,344
+Cloudflare,Dubai,C,6,,3206.0,612
+Cloudflare,Dubai,C,7,2860.0,3021.0,542
+Cloudflare,Dubai,C,8,2969.0,3100.0,552
+Cloudflare,Dubai,C,9,3384.0,3602.0,335
+Cloudflare,Dubai,D,1,,11403.0,909
+Cloudflare,Dubai,D,2,7531.0,7971.0,704
+Cloudflare,Dubai,D,3,,5364.0,318
+Cloudflare,Dubai,D,4,7572.0,7926.0,791
+Cloudflare,Dubai,D,5,5063.0,5370.0,571
+Cloudflare,Dubai,D,6,7368.0,7713.0,711
+Cloudflare,Dubai,D,7,5135.0,5329.0,690
+Cloudflare,Dubai,D,8,4940.0,5265.0,513
+Cloudflare,Dubai,D,9,,6641.0,633
+Cloudflare,London,A,1,6028.0,6911.0,775
+Cloudflare,London,A,2,2838.0,3032.0,298
+Cloudflare,London,A,3,2892.0,4308.0,285
+Cloudflare,London,A,4,2974.0,4103.0,325
+Cloudflare,London,A,5,2732.0,3755.0,258
+Cloudflare,London,A,6,2730.0,4345.0,248
+Cloudflare,London,A,7,2776.0,3648.0,265
+Cloudflare,London,A,8,2743.0,4198.0,248
+Cloudflare,London,A,9,2729.0,3624.0,246
+Cloudflare,London,B,1,4188.0,4458.0,735
+Cloudflare,London,B,2,2941.0,3593.0,260
+Cloudflare,London,B,3,3096.0,3903.0,300
+Cloudflare,London,B,4,3047.0,3718.0,268
+Cloudflare,London,B,5,3036.0,2913.0,272
+Cloudflare,London,B,6,3051.0,2993.0,244
+Cloudflare,London,B,7,3055.0,3636.0,248
+Cloudflare,London,B,8,3189.0,2837.0,270
+Cloudflare,London,B,9,2973.0,3340.0,264
+Cloudflare,London,C,1,4061.0,4571.0,1040
+Cloudflare,London,C,2,3521.0,4228.0,464
+Cloudflare,London,C,3,3882.0,4239.0,786
+Cloudflare,London,C,4,2837.0,3694.0,290
+Cloudflare,London,C,5,2798.0,3588.0,263
+Cloudflare,London,C,6,2985.0,3421.0,286
+Cloudflare,London,C,7,2760.0,2805.0,279
+Cloudflare,London,C,8,2738.0,3142.0,267
+Cloudflare,London,C,9,2665.0,3796.0,274
+Cloudflare,London,D,1,4764.0,5006.0,761
+Cloudflare,London,D,2,3539.0,3982.0,317
+Cloudflare,London,D,3,3671.0,4504.0,281
+Cloudflare,London,D,4,3575.0,4671.0,272
+Cloudflare,London,D,5,3475.0,4279.0,247
+Cloudflare,London,D,6,3433.0,4204.0,243
+Cloudflare,London,D,7,3524.0,4382.0,253
+Cloudflare,London,D,8,3455.0,3930.0,266
+Cloudflare,London,D,9,3455.0,4009.0,265
+Cloudflare,Singapore,A,1,14282.0,15198.0,1910
+Cloudflare,Singapore,A,2,10868.0,11753.0,1550
+Cloudflare,Singapore,A,3,15776.0,15421.0,1220
+Cloudflare,Singapore,A,4,3089.0,4579.0,498
+Cloudflare,Singapore,A,5,4449.0,5498.0,1828
+Cloudflare,Singapore,A,6,,1397.0,569
+Cloudflare,Singapore,A,7,,1294.0,527
+Cloudflare,Singapore,A,8,3130.0,3862.0,648
+Cloudflare,Singapore,A,9,2948.0,3772.0,491
+Cloudflare,Singapore,B,1,4538.0,4916.0,966
+Cloudflare,Singapore,B,2,10353.0,10944.0,926
+Cloudflare,Singapore,B,3,5829.0,6670.0,1306
+Cloudflare,Singapore,B,4,5325.0,5539.0,1897
+Cloudflare,Singapore,B,5,3339.0,3682.0,587
+Cloudflare,Singapore,B,6,3371.0,3753.0,468
+Cloudflare,Singapore,B,7,3537.0,3819.0,609
+Cloudflare,Singapore,B,8,,1199.0,945
+Cloudflare,Singapore,B,9,3619.0,3950.0,648
+Cloudflare,Singapore,C,1,4027.0,4768.0,1110
+Cloudflare,Singapore,C,2,3189.0,3538.0,623
+Cloudflare,Singapore,C,3,3025.0,3572.0,537
+Cloudflare,Singapore,C,4,3750.0,3866.0,876
+Cloudflare,Singapore,C,5,3045.0,3901.0,582
+Cloudflare,Singapore,C,6,3057.0,2904.0,513
+Cloudflare,Singapore,C,7,4335.0,4456.0,827
+Cloudflare,Singapore,C,8,10751.0,11493.0,894
+Cloudflare,Singapore,C,9,9153.0,9726.0,3440
+Cloudflare,Singapore,D,1,5653.0,6463.0,1467
+Cloudflare,Singapore,D,2,8827.0,9640.0,941
+Cloudflare,Singapore,D,3,5800.0,7077.0,1155
+Cloudflare,Singapore,D,4,4128.0,4721.0,630
+Cloudflare,Singapore,D,5,10350.0,11018.0,917
+Cloudflare,Singapore,D,6,5844.0,6631.0,1019
+Cloudflare,Singapore,D,7,5434.0,6167.0,991
+Cloudflare,Singapore,D,8,3631.0,3930.0,532
+Cloudflare,Singapore,D,9,7232.0,8085.0,4008
