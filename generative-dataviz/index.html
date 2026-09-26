@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>288 page loads</title>
+<title>Every bit counts</title>
 <meta name="description" content="One website behind two CDNs, drawn as bars of streaming ones and zeros: why the bars are made of bits, how they move, and how the colours were measured in OKLCH.">
 
 <link rel="canonical" href="https://artdataviz.github.io/generative-dataviz/">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 
 <!-- Open Graph. The card is a crop of the still render (frame 0), not artwork. -->
-<meta property="og:title" content="Dataviz · 288 page loads" />
+<meta property="og:title" content="Dataviz · Every bit counts" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://artdataviz.github.io/generative-dataviz/" />
 <meta property="og:image" content="https://artdataviz.github.io/generative-dataviz/og.jpg" />
@@ -108,6 +108,7 @@
       line-height:1.6; color:#e3e6ee; -webkit-overflow-scrolling:touch}
   pre code{background:none; color:inherit; padding:0; font-size:inherit}
   pre .c{color:var(--ink-faint)}
+  pre.wrap{white-space:pre-wrap; overflow-wrap:anywhere}  /* the credit line: wrap it, don't scroll it */
   .tablewrap{overflow-x:auto; margin:1.6em 0; border:1px solid var(--rule); border-radius:10px}
   table{border-collapse:collapse; width:100%; font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif;
         font-size:14.5px}
@@ -151,7 +152,7 @@
 </nav>
 
 <header class="page-head">
-  <h1>Dataviz &middot; 288 page loads</h1>
+  <h1>Dataviz &middot; Every bit counts</h1>
   <p class="sub">One website behind two CDNs, timed from four cities in May 2024.
   Every bar is a column of ones and zeros: the bits move, the heights don't.</p>
 </header>
@@ -164,8 +165,9 @@
       <img src="binary_bars.gif" width="1200" height="720"
            alt="Bar chart of median Largest Contentful Paint. Cloudflare against Amazon CloudFront: London 3,049 ms against 2,653; Dubai 3,387 against 2,123; Singapore 4,449 against 2,912; Cape Town 4,915 against 2,818. Each bar is a column of orange or purple ones and zeros that stream downward.">
     </picture>
-    <figcaption class="sans">Median Largest Contentful Paint per city. Dotted lines:
-    Google's 2,500 ms and 4,000 ms thresholds. The numbers are in the table in section 1.</figcaption>
+    <figcaption class="sans">Median Largest Contentful Paint per city and CDN. The dotted
+    lines are Google's 2,500 ms and 4,000 ms thresholds. Exact numbers:
+    <a href="https://github.com/artdataviz/artdataviz.github.io/blob/main/generative-dataviz/generator/lcp_medians.csv">lcp_medians.csv</a>.</figcaption>
   </figure>
 </div>
 
@@ -175,25 +177,26 @@
 
 <main id="article">
 
-  <p class="lede">I found this chart while cleaning my laptop: a generative-dataviz
-  experiment from May 2024. It compares one website served two ways, through
-  Amazon CloudFront and through Cloudflare, each on its default settings.</p>
+  <p class="lede">I found this chart while cleaning up my laptop. It's a
+  generative-dataviz experiment from May 2024: one website served two ways,
+  through Amazon CloudFront and through Cloudflare, both left on default
+  settings.</p>
 
-  <p>This page is about the chart: why the bars are made of bits, how they move,
-  and how the colours were measured. The experiment behind it gets one section.</p>
+  <p>This page is mostly about how the chart is made: why the bars are built
+  from bits, how they move, and how I measured the colours. The experiment
+  itself gets one short section.</p>
 
   <hr>
 
-  <h2>1 &middot; The data, at a glance</h2>
+  <h2>1 &middot; The data, briefly</h2>
 
-  <p>A client's virtual-tour site, deployed twice: one copy behind
-  <strong>Amazon CloudFront</strong>, one behind <strong>Cloudflare</strong>, both
-  on default settings. Both delivered the same page: a median 3.34 MB in 78
-  requests.</p>
+  <p>The site is a client's virtual tour, deployed twice, once behind each CDN.
+  Both copies serve the same page, a median 3.34 MB in 78 requests.</p>
 
-  <p>On 16 May 2024, WebPageTest loaded 4 tours from 4 cities through both CDNs,
-  9 times each: <strong>288 page loads</strong> in desktop Chrome, on a 5 Mbps
-  cable profile, with an empty cache every time.</p>
+  <p>On 16 May 2024 I ran it through WebPageTest from London, Dubai, Singapore
+  and Cape Town: four tours, both CDNs, nine runs each. That's <strong>288 page
+  loads</strong> in desktop Chrome on a 5 Mbps cable profile, every one of them
+  with an empty cache.</p>
 
   <ol class="flow" aria-label="Pipeline">
     <li><b>WebPageTest API</b><span>32 tests &times; 9 runs</span></li>
@@ -203,110 +206,86 @@
     <li><b>Chart</b><span>8 bars</span></li>
   </ol>
 
-  <p>Each bar is a median of Largest Contentful Paint (LCP): the time until the
-  largest element on the page appears.</p>
-
-  <div class="tablewrap"><table>
-    <thead><tr><th>City</th><th class="num">CloudFront, ms</th><th class="num">Cloudflare, ms</th>
-      <th class="num">Gap, ms</th><th class="num">Ratio</th></tr></thead>
-    <tbody>
-      <tr><td>London</td><td class="num">2,653</td><td class="num">3,049</td><td class="num">+396</td><td class="num">1.15&times;</td></tr>
-      <tr><td>Dubai</td><td class="num">2,123</td><td class="num">3,387</td><td class="num">+1,264</td><td class="num">1.60&times;</td></tr>
-      <tr><td>Singapore</td><td class="num">2,912</td><td class="num">4,449</td><td class="num">+1,538</td><td class="num">1.53&times;</td></tr>
-      <tr><td>Cape Town</td><td class="num">2,818</td><td class="num">4,915</td><td class="num">+2,097</td><td class="num">1.74&times;</td></tr>
-    </tbody>
-  </table></div>
-
-  <p>The gap starts at the first byte: CloudFront answered in 202&ndash;238 ms in
-  every city, Cloudflare in 271&ndash;906 ms. One configuration, one day, lab
-  data: not a verdict on either CDN.</p>
+  <p>Each bar is the median Largest Contentful Paint (LCP) for one city and one
+  CDN, the moment the largest element on the page appears. It's one setup, on
+  one day, in a lab, so please don't read it as a verdict on either CDN.</p>
 
   <hr>
 
-  <h2>2 &middot; Why the bars are made of bits</h2>
+  <h2>2 &middot; Why bits</h2>
 
-  <p>Height carries the value, as in any bar chart. Colour carries the CDN. The
-  bits carry no data, but they are not random decoration: the test measured how
-  long a page's bits take to cross the internet, so the bars are built from
-  bits.</p>
+  <p>As in any bar chart, height carries the value and colour tells the two CDNs
+  apart. The ones and zeros don't encode anything extra.</p>
 
-  <p>As texture, they make the bars breathe. Bits stream down, flash and fade
-  like data in transit, while the heights hold still.</p>
+  <p>They aren't random decoration either. The whole test is about how long a
+  page's bits take to travel across the internet, so building the bars out of
+  bits felt right. They also make the bars feel alive. Bits drip down, flash and
+  fade, and the heights stay exactly where the data puts them.</p>
 
-  <p><strong>Generative, within rules.</strong> Chance draws the bits, and four
-  rules limit it:</p>
-  <ul>
-    <li><strong>Five characters per row</strong>, each a <code>1</code>, a
-      <code>0</code> or a space.</li>
-    <li><strong>The top row is always solid.</strong> It never gets a space, so
-      each bar's exact height reads at a glance.</li>
-    <li><strong>Below it, spaces fall by probability:</strong> 4 in 25 on the
-      bottom row, 12 in 35 in the body. The base stays denser than the body.</li>
-    <li><strong>Opacity is random too.</strong> 70% of bits sit at full opacity,
-      the rest at 57&ndash;100%.</li>
-  </ul>
+  <p>The bits are generated, with a few rules to keep chance in check. Each row
+  has five characters, and each one is a <code>1</code>, a <code>0</code> or a
+  space. The top row never gets a space, so you can see exactly where a bar ends.
+  Below it, spaces show up by probability: 4 in 25 on the bottom row and 12 in 35
+  in the body, which keeps the base denser. Opacity is random too. 70% of the
+  bits are fully opaque, and the rest land somewhere between 57% and 100%.</p>
 
-  <p>Every render draws new bits, and the heights never move; the published loop
-  fixes seed 2024.</p>
+  <p>Every render draws a new set of bits, and the heights never change. The
+  version on this page uses seed 2024.</p>
 
-
-  <p><strong>One row = 77 ms.</strong> The number is an artistic choice. At 77 ms
-  per row, every row of bits stays visible, and the glyphs are big enough to read
-  and small enough to keep precision. Rows round down, so a bar can sit up to
-  76 ms short of its median. The smallest gap in the chart is 396 ms, so rounding
-  never flips a comparison.</p>
+  <p>One row stands for 77 ms. It's an artistic choice, after all. At 77 ms
+  every row is still visible, and the characters are big enough to read but
+  small enough to keep the chart precise. Rows round down, so a bar can come up
+  to 76 ms short. The smallest gap between two bars is 396 ms, so the rounding
+  never changes which one is taller.</p>
 
   <hr>
 
   <h2>3 &middot; How it moves</h2>
 
-  <p>The heights stay fixed, so every frame is a correct chart. The bits stream
-  down inside the bars.</p>
+  <p>The heights are fixed, so every single frame is a correct chart. Only the
+  bits move.</p>
 
-  <p><strong>A looping tape per column of bits.</strong> Row <code>r</code> at
-  frame <code>f</code> shows tape cell <code>r + f // speed</code>. One step
-  later, every cell sits one row lower.</p>
+  <p>Each column of bits reads from its own looping tape. At frame
+  <code>f</code>, row <code>r</code> shows tape cell <code>r + f // speed</code>,
+  so with every step the whole column slides down one row.</p>
 
 <pre><code>r = np.arange(n_rows - 1)[:, None]               <span class="c"># body rows, bottom first</span>
 idx = (r + f // speeds) % (frames // speeds)     <span class="c"># one row down per speed step</span></code></pre>
 
-  <p><strong>Three speeds.</strong> Each column steps one row every 2, 4 or 6
-  frames, picked at random. 192 frames divide by all three, so the last frame
-  runs into the first: an 8.6 s loop at 22.4 fps.</p>
+  <p>Columns move at one of three speeds: one row every 2, 4 or 6 frames. The
+  loop is 192 frames long, and all three speeds divide into it, so the last
+  frame flows straight into the first. At 22.4 fps that's 8.6 seconds.</p>
 
-  <p><strong>The top row stays put.</strong> Its bits flip twice per loop, and it
-  never blanks or fades, so the edge that carries the value holds still.</p>
+  <p>The top row stays put. Its bits flip twice per loop, but it never blanks or
+  fades, because that edge is the value.</p>
 
-  <p><strong>Sparkle.</strong> At any frame, 5.6% of bits are mid-flash. A flash
-  lasts 0.22 s, lifts opacity to 100% and pales the colour 60% toward white. It
-  rides down with its bit.</p>
+  <p>Two effects sit on top. At any moment 5.6% of the bits are flashing: for
+  0.22 s they turn fully opaque and 60% paler, and ride down with their column.
+  Another 5% are dissolving, fading over 1.4 s to a tenth of their opacity.</p>
 
-  <p><strong>Dissolve.</strong> At any frame, 5% of bits are mid-fade. A fade
-  lasts 1.4 s and bottoms out at 10% of the bit's opacity.</p>
-
-  <p class="note">39 tests hold the rules in place. Among them: bar height is the
-  same in every frame, the top row never blanks, and sparkle and dissolve hit
-  their rates.</p>
+  <p class="note">39 tests keep all of this honest. For example, bar height is
+  identical in every frame, and the top row never has a gap.</p>
 
   <hr>
 
-  <h2>4 &middot; Colour, measured</h2>
+  <h2>4 &middot; Measuring colour</h2>
 
-  <p>The hues come from the two logos: Cloudflare orange and CloudFront purple.
-  The lightness comes from a measurement.</p>
+  <p>This is my favourite part. The hues come from the two logos, Cloudflare
+  orange and CloudFront purple. The lightness, though, I measured.</p>
 
-  <p>In 2024 I picked <code>#E5873B</code> and <code>#895FEE</code> by eye.
-  Measured in OKLCH, they sat at lightness 0.71 and 0.60. The purple was darker,
-  so CloudFront, the faster CDN, looked dimmer as well as shorter: the colour
-  argued against the data.</p>
+  <p>Back in 2024 I picked <code>#E5873B</code> and <code>#895FEE</code> by eye.
+  When I measured them in OKLCH this year, the orange came out at lightness 0.71
+  and the purple at 0.60. So the purple bars were darker, and CloudFront, the
+  faster CDN, looked dimmer as well as shorter. The colour was arguing against
+  the data.</p>
 
-  <p>The fix kept the purple's hue, 293&deg;, and lifted its lightness to 0.71:
-  <code>#A68BFE</code>. Now neither CDN reads louder, and only height
-  differs.</p>
+  <p>The fix was to keep the purple's hue, 293&deg;, and lift its lightness to
+  0.71. That gives <code>#A68BFE</code>. Now neither CDN looks louder than the
+  other, and height is the only difference.</p>
 
-  <p><strong>Why OKLCH, not HSL.</strong> OKLCH is built so that equal L looks
-  equally light. HSL is not: it rates the orange at 57% and the new purple at
-  77%, while OKLCH rates both 0.71.</p>
+  <p>Why OKLCH and not HSL? OKLCH is designed so that the same L looks equally
+  light to the eye. HSL isn't. It calls the orange 57% light and the new purple
+  77%, while OKLCH puts both at 0.71.</p>
 
   <div class="tablewrap"><table>
     <thead><tr><th>Role</th><th>Colour</th><th class="num">L</th><th class="num">C</th><th class="num">Hue</th></tr></thead>
@@ -320,32 +299,25 @@ idx = (r + f // speeds) % (frames // speeds)     <span class="c"># one row down 
     </tbody>
   </table></div>
 
-  <p><strong>Threshold lines follow the same rule.</strong> Google grades LCP in
-  three bands: good up to 2,500 ms, needs improvement up to 4,000 ms, poor above.
-  The chart draws both borders.</p>
+  <p>The threshold lines got the same treatment. Google grades LCP in three
+  bands: good up to 2,500 ms, needs improvement up to 4,000 ms, and poor above
+  that. The chart draws both borders.</p>
 
-  <p>Until this version, lime <code>#ADE63C</code> and red <code>#E64D3C</code> at
-  80% opacity measured L 0.75 and 0.56 on the background: the &ldquo;good&rdquo;
-  line shone brighter than the bars, and the two lines didn't match. Now both
-  sit at L 0.64 and chroma 0.165: equal to each other, and a step behind the
-  bars. Reference lines frame the data; they shouldn't outshine it.</p>
+  <p>In the previous version the lines were lime <code>#ADE63C</code> and red
+  <code>#E64D3C</code> at 80% opacity. Measured against the background, that's
+  L 0.75 and 0.56. The &ldquo;good&rdquo; line was brighter than the bars
+  themselves, and the two lines didn't match each other. Now both sit at L 0.64
+  with chroma 0.165, equal to each other and a notch below the bars. Reference
+  lines are there to frame the data, and they shouldn't shout louder than it.</p>
 
-  <h3>How to do it in production</h3>
-  <ul>
-    <li><strong>CSS</strong> takes OKLCH directly in every current browser:
-      <code>color: oklch(0.71 0.164 292.5)</code>. Give every series the same L.</li>
-    <li><strong>Python:</strong> <a href="https://facelessuser.github.io/coloraide/">coloraide</a>
-      converts, adjusts and fits the result back into sRGB.</li>
-    <li><strong>By eye:</strong> <a href="https://oklch.com">oklch.com</a> shows
-      which chroma still fits the screen gamut at a given lightness.</li>
-    <li><strong>Check colour blindness after.</strong> About 1 in 12 men sees
-      colour differently, most often mixing up reds and greens. Matched lightness
-      takes away the brightness cue, so hue alone has to keep the bars apart. A
-      simulator shows the pair as those eyes see it, and &Delta;E measures how far
-      apart the two colours look: 0 is identical, 8 is the usual minimum for chart
-      colours. Orange and purple score 27 for red-blind and green-blind vision:
-      still easy to tell apart.</li>
-  </ul>
+  <h3>Doing this in production</h3>
+
+  <p>In CSS you can write OKLCH directly, and every current browser supports it:
+  <code>color: oklch(0.71 0.164 292.5)</code>. Give all your series the same L
+  and you're most of the way there.</p>
+
+  <p>In Python, <a href="https://facelessuser.github.io/coloraide/">coloraide</a>
+  does the conversion and pulls the result back into the sRGB gamut:</p>
 
 <pre><code>from coloraide import Color                        <span class="c"># pip install coloraide</span>
 
@@ -353,50 +325,92 @@ purple = Color('#895FEE').convert('oklch')         <span class="c"># L 0.60, C 0
 purple['lightness'] = 0.71                          <span class="c"># match the orange</span>
 purple.convert('srgb').fit().to_string(hex=True)    <span class="c"># '#a68aff', one step off #A68BFE</span></code></pre>
 
+  <p>If you'd rather pick by eye, <a href="https://oklch.com">oklch.com</a> shows
+  which chroma values still fit on screen at a given lightness.</p>
+
+  <p>Then check colour blindness. About 1 in 12 men sees colour differently,
+  most often mixing up reds and greens. Once lightness is matched, brightness no
+  longer helps tell the bars apart, so hue has to do all the work. A simulator
+  shows the pair the way those eyes see it, and &Delta;E measures how far apart
+  the two colours look: 0 means identical, and 8 is the usual minimum for chart
+  colours. Orange and purple score 27 for red-blind and green-blind vision, so
+  they're still easy to tell apart.</p>
+
   <hr>
 
-  <h2>5 &middot; Layout</h2>
+  <h2>5 &middot; Small layout decisions</h2>
 
-  <ul>
-    <li><strong>Labels turn a number into a judgement.</strong> A line alone says
-      2,500. The label says what it means: &ldquo;good&rdquo; with &darr;, since good
-      loads fall below the line, and &ldquo;poor&rdquo; with &uarr;. The words carry
-      the meaning, so red against green is never the only cue.</li>
-    <li><strong>Bars cut the lines.</strong> A background panel behind each bar
-      breaks a line where a bar stands. Dots never cross the digits, and every bar
-      keeps a clean edge.</li>
-    <li><strong>Order sets the direction.</strong> Cities are sorted by the
-      Cloudflare median, 3.0 s to 4.9 s. The orange bars climb left to right, the
-      purple ones stay under 3 s, and the gap widens at every step: +396, +1,264,
-      +1,538, +2,097 ms. The chart reads as one movement, not four separate
-      comparisons.</li>
-    <li><strong>The subtitle is the legend.</strong> &ldquo;&#9679; Cloudflare vs
-      &#9679; Amazon CloudFront&rdquo; names the comparison and keys the colours in
-      one line. No legend box sits in the plot, so the space stays with the
-      data.</li>
-    <li><strong>Text stays neutral.</strong> Labels are white at 70%, names in
-      title ink. Only the dots and the bits wear the CDN colours.</li>
-  </ul>
+  <p>A line on its own only says &ldquo;2,500&rdquo;. The labels say what that
+  means: &ldquo;good&rdquo; with an arrow pointing down, since good loads fall
+  below the line, and &ldquo;poor&rdquo; with an arrow pointing up. The words
+  carry the meaning, so nobody has to rely on telling red from green.</p>
+
+  <p>Bars cut through the lines. Each bar has a panel of background colour behind
+  it, one layer above the lines, so the dots stop where a bar starts and never
+  run across the digits.</p>
+
+  <p>The cities are sorted by the Cloudflare median, from 3.0 s to 4.9 s. The
+  orange bars climb from left to right, the purple ones stay under 3 s, and the
+  gap between them grows at every step: +396, +1,264, +1,538, +2,097 ms. You read
+  the chart as one movement instead of four separate comparisons.</p>
+
+  <p>There's no legend box. The subtitle does that job: &ldquo;&#9679; Cloudflare
+  vs &#9679; Amazon CloudFront&rdquo;, each dot in its bar colour. It names the
+  comparison and explains the colours in one line, and the plot stays free for
+  the data.</p>
+
+  <p>All the text stays neutral: white at 70% for the labels, title ink for the
+  names. Only the dots and the bits carry the CDN colours.</p>
 
   <hr>
 
   <h2>6 &middot; Make your own</h2>
 
   <p>The <a href="https://github.com/artdataviz/artdataviz.github.io/tree/main/generative-dataviz/generator">generator</a>
-  takes a CSV of category, group and value, and writes a PNG, an MP4 and a GIF.
-  It needs Python 3.10+ and ffmpeg.</p>
+  is on GitHub. It takes one CSV and writes a PNG, an MP4 and a GIF. You'll need
+  Python 3.10+ and ffmpeg.</p>
+
+  <p>The CSV has three columns and one row per bar, in the order you want the
+  bars drawn. This is the file behind the chart above:</p>
+
+<pre><code>category,group,value
+London,Cloudflare,3049.0
+London,Amazon CloudFront,2653.0
+Dubai,Cloudflare,3387.0
+Dubai,Amazon CloudFront,2123.0
+Singapore,Cloudflare,4449.0
+Singapore,Amazon CloudFront,2911.5
+Cape Town,Cloudflare,4915.0
+Cape Town,Amazon CloudFront,2818.0</code></pre>
+
+  <ul>
+    <li><code>category</code> is the label under each cluster of bars, here the
+      city.</li>
+    <li><code>group</code> is the bar inside a cluster, here the CDN. Each group
+      gets its own colour, in the order it first appears. Two groups work out of
+      the box; for more, pass <code>--colors</code>.</li>
+    <li><code>value</code> is the bar's height in your own units, here
+      milliseconds.</li>
+  </ul>
+
+  <p>Then run:</p>
 
 <pre><code>python binary_bars.py lcp_medians.csv --out chart --row-value 77 \
     --hline '2500:#719D00:good:down' --hline '4000:#DE5D4D:poor:up'</code></pre>
 
-  <p><strong>Reuse.</strong> The chart, the animation, this text and the data are
-  under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>:
-  share and adapt them, commercially too, if you credit the author and link to
-  this page. The code is under the
-  <a href="https://github.com/artdataviz/artdataviz.github.io/blob/main/generative-dataviz/generator/LICENSE">MIT licence</a>.
-  Credit line:</p>
+  <p><code>--row-value</code> sets how many units one row of bits stands for;
+  leave it out and the tallest bar gets 63 rows. <code>--hline</code> draws a
+  reference line from a value, a colour, and optionally a label and an arrow
+  direction. Repeat it for more lines.</p>
 
-<pre><code>Aleksey Zabelin, "288 page loads", artdataviz.github.io/generative-dataviz, CC BY 4.0</code></pre>
+  <p><strong>Reuse.</strong> The chart, the animation, this text and the data are
+  under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. You
+  can share and adapt them, commercially too, as long as you credit me and link
+  to this page. The code is under the
+  <a href="https://github.com/artdataviz/artdataviz.github.io/blob/main/generative-dataviz/generator/LICENSE">MIT licence</a>.
+  A credit line you can copy:</p>
+
+<pre class="wrap"><code>Aleksey Zabelin, "Every bit counts", artdataviz.github.io/generative-dataviz, CC BY 4.0</code></pre>
 
   <footer class="sans">
     Data: <a href="https://www.webpagetest.org">WebPageTest</a>, 16 May 2024,

@@ -74,5 +74,5 @@ Code: [MIT](LICENSE). The chart, the animation, the write-up and the data:
 and link to the page:
 
 ```
-Aleksey Zabelin, "288 page loads", artdataviz.github.io/generative-dataviz, CC BY 4.0
+Aleksey Zabelin, "Every bit counts", artdataviz.github.io/generative-dataviz, CC BY 4.0
 ```
