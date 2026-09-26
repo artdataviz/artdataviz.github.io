@@ -1,0 +1,114 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Topbar from '../components/Topbar.astro';
+import { mergePosts } from '../lib/posts';
+import { formatDate, isoDate } from '../lib/dates';
+
+const description = 'Data visualisations by Aleksey Zabelin, each with a write-up of how it was made.';
+
+// Every dated post, whatever it was built with. See src/content.config.ts.
+const posts = mergePosts(
+  (await getCollection('htmlPosts')).map(({ id, data }) => ({ slug: id, ...data })),
+  (await getCollection('mdxPosts')).map(({ id, data }) => ({
+    slug: id,
+    title: data.title,
+    description: data.description,
+    date: data.date,
+    image: { src: data.image.src, width: data.image.width, height: data.image.height },
+  })),
+);
+---
+<Base
+  title="artdataviz"
+  description={description}
+  path="/"
+  og={{
+    type: 'website',
+    // The card borrows the panorama's until the site has its own.
+    image: '/8631-stars/og.jpg',
+    imageWidth: 1200,
+    imageHeight: 630,
+    imageAlt: 'A dark starfield with Orion and Sirius, captioned 8,631 stars.',
+  }}
+>
+  <Fragment slot="head">
+    <!-- The root used to forward to the panorama, and /?con=Ori opened Orion.
+         Links of that shape are still out there, so they keep going through. -->
+    <script is:inline>
+      if (new URLSearchParams(location.search).has('con'))
+        location.replace('/8631-stars/' + location.search + location.hash);
+    </script>
+  </Fragment>
+
+  <Topbar />
+
+  <div class="wrap">
+    <header>
+      <h1>artdataviz</h1>
+      <p class="sub">{description}</p>
+    </header>
+
+    <main>
+      <h2>Posts</h2>
+      <ul class="posts">
+        {posts.map((post) => (
+          <li class="post">
+            <a href={`/${post.slug}/`}>
+              <img src={post.image.src} width={post.image.width} height={post.image.height} alt="" decoding="async">
+              <div class="body">
+                <time datetime={isoDate(post.date)}>{formatDate(post.date)}</time>
+                <h3>{post.title}</h3>
+                <p>{post.description}</p>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </main>
+
+    {/* One line: the build's HTML compression drops a space that ends a line. */}
+    <footer>
+      &copy; Aleksey Zabelin &middot; <a href="https://www.linkedin.com/in/alekseyzabelin/">LinkedIn</a> &middot; <a href="https://github.com/artdataviz/artdataviz.github.io">Source on GitHub</a>
+    </footer>
+  </div>
+</Base>
+
+<style>
+  .wrap{max-width:62rem; margin:0 auto;
+    padding:0 max(clamp(20px,5vw,32px), var(--edge-r)) 0 max(clamp(20px,5vw,32px), var(--edge-l))}
+
+  /* ---- page head ---- */
+  header{padding:clamp(28px,6vw,64px) 0 clamp(8px,2vw,16px)}
+  h1{margin:0; font-size:clamp(30px,6vw,52px); line-height:1.1; letter-spacing:-.02em;
+    font-weight:600; color:#fff}
+  .sub{margin:.55em 0 0; max-width:34rem; color:var(--ink-dim); font-family:var(--sans);
+    font-size:clamp(14px,2vw,17px); line-height:1.55}
+
+  h2{font-family:var(--sans); font-size:13px; letter-spacing:.15em; text-transform:uppercase;
+     font-weight:650; color:var(--accent); margin:clamp(28px,5vw,48px) 0 18px}
+
+  /* ---- posts ---- */
+  .posts{list-style:none; margin:0; padding:0; display:grid; gap:clamp(18px,3vw,28px);
+    grid-template-columns:repeat(auto-fill, minmax(min(100%, 22rem), 1fr))}
+  .post a{display:flex; flex-direction:column; height:100%; color:inherit; text-decoration:none;
+    background:var(--panel); border:1px solid var(--rule); border-radius:12px; overflow:hidden;
+    transition:border-color .25s ease, box-shadow .25s ease}
+  .post a:hover, .post a:focus-visible{border-color:rgba(232,201,138,.45);
+    box-shadow:0 0 30px rgba(232,201,138,.10)}
+  .post a:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+  .post img{display:block; width:100%; height:auto; aspect-ratio:1200/630; object-fit:cover;
+    border-bottom:1px solid var(--rule)}
+  .post .body{padding:16px 18px 20px}
+  .post time{font-family:var(--sans); font-size:12px; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--ink-faint)}
+  .post h3{margin:.2em 0 .35em; font-size:clamp(20px,2.6vw,24px); line-height:1.25;
+    font-weight:600; letter-spacing:-.01em; color:#fff}
+  .post a:hover h3{color:var(--accent)}
+  .post p{margin:0; color:var(--ink-dim); font-size:15.5px; line-height:1.6}
+
+  footer{margin:clamp(48px,8vw,88px) 0 0; padding:1.6em 0 calc(40px + var(--edge-b));
+    border-top:1px solid var(--rule); font-family:var(--sans); font-size:14px; color:var(--ink-faint)}
+  footer a{color:var(--ink-dim); text-decoration:none; border-bottom:1px solid var(--rule)}
+  footer a:hover{color:var(--accent); border-bottom-color:var(--accent)}
+</style>

@@ -1,0 +1,42 @@
+---
+import type { ImageMetadata } from 'astro';
+import Base from './Base.astro';
+import Topbar from '../components/Topbar.astro';
+import '../styles/post.css';
+
+interface Props {
+  slug: string;
+  title: string;
+  description: string;
+  date: Date;
+  image: ImageMetadata;
+  imageAlt: string;
+  subtitle?: string;
+}
+
+const { slug, title, description, date, image, imageAlt, subtitle } = Astro.props;
+---
+<Base
+  title={title}
+  description={description}
+  path={`/${slug}/`}
+  og={{
+    type: 'article',
+    image: image.src,
+    imageWidth: image.width,
+    imageHeight: image.height,
+    imageAlt,
+    published: date,
+  }}
+>
+  <div class="page">
+    <Topbar home />
+    <header class="page-head">
+      <h1>{title}</h1>
+      {subtitle && <p class="sub">{subtitle}</p>}
+    </header>
+    <main class="article" id="article">
+      <slot />
+    </main>
+  </div>
+</Base>
