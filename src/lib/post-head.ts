@@ -1,10 +1,10 @@
-import { decodeHTML } from 'entities';
+import { decodeHTML, decodeHTMLAttribute } from 'entities';
 
 /** What a finished HTML post says about itself in its <head>. */
 export interface PostHead {
   title?: string;
   description?: string;
-  /** article:published_time, as written. A post without it is unlisted. */
+  /** The YYYY-MM-DD day of article:published_time, as written. A post without it is unlisted. */
   published?: string;
   /** og:image, as written: absolute, root-relative or relative. */
   image?: string;
@@ -14,12 +14,14 @@ export interface PostHead {
 }
 
 const COMMENT = /<!--[\s\S]*?-->/g;
-const META = /<meta\b([^>]*)>/gi;
+// Quoted values may hold ">", so attributes are matched quote-aware.
+const META = /<meta\b((?:[^>"']|"[^"]*"|'[^']*')*)>/gi;
 const ATTR = /([^\s=/>]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+))/g;
 
 export function readPostHead(html: string): PostHead {
-  const end = html.search(/<\/head>/i);
-  const head = (end === -1 ? html : html.slice(0, end)).replace(COMMENT, '');
+  const page = html.replace(COMMENT, '');
+  const end = page.search(/<\/head>/i);
+  const head = end === -1 ? page : page.slice(0, end);
 
   // name="description" and property="og:…" share one map; their keys never collide.
   const meta = new Map<string, string>();
@@ -28,7 +30,7 @@ export function readPostHead(html: string): PostHead {
       [...attrs.matchAll(ATTR)].map(([, key, dq, sq, bare]) => [key.toLowerCase(), dq ?? sq ?? bare]),
     );
     const key = (a.property ?? a.name)?.toLowerCase();
-    if (key && a.content !== undefined && !meta.has(key)) meta.set(key, decodeHTML(a.content).trim());
+    if (key && a.content !== undefined && !meta.has(key)) meta.set(key, decodeHTMLAttribute(a.content).trim());
   }
 
   const title = head.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1];
@@ -37,7 +39,8 @@ export function readPostHead(html: string): PostHead {
   return {
     title: title === undefined ? undefined : decodeHTML(title).trim(),
     description: meta.get('description'),
-    published: meta.get('article:published_time'),
+    // The card shows the day the author wrote, not that day moved to UTC.
+    published: meta.get('article:published_time')?.slice(0, 10),
     image: meta.get('og:image'),
     imageWidth: int('og:image:width'),
     imageHeight: int('og:image:height'),
@@ -47,6 +50,6 @@ export function readPostHead(html: string): PostHead {
 
 /** A link from a post's head, as a path on this site when it points here. */
 export function sitePath(url: string, slug: string, site: string): string {
-  const resolved = new URL(url, `${site}/${slug}/`);
+  const resolved = new URL(url, new URL(`/${slug}/`, site));
   return resolved.origin === new URL(site).origin ? resolved.pathname : resolved.href;
 }

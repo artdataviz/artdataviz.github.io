@@ -1,9 +1,14 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Post from '../../layouts/Post.astro';
+import { publicClash } from '../../lib/posts';
 
 export async function getStaticPaths() {
   const posts = await getCollection('mdxPosts');
+  const clash = publicClash(posts.map((post) => post.id), 'public');
+  if (clash) {
+    throw new Error(`Two posts claim /${clash}/: public/${clash} and src/posts/${clash}/index.mdx. Rename one.`);
+  }
   return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
 }
 

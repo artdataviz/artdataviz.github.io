@@ -1,6 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mergePosts, type Card } from './posts.ts';
+import { mkdtempSync, mkdirSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { mergePosts, publicClash, type Card } from './posts.ts';
 
 const card = (slug: string, date: string): Card => ({
   slug,
@@ -23,9 +26,9 @@ test('posts on the same day keep a stable order', () => {
   assert.deepEqual(posts.map((p) => p.slug), ['a', 'b']);
 });
 
-test('refuses two posts with the same slug', () => {
-  assert.throws(
-    () => mergePosts([card('8631-stars', '2026-09-09')], [card('8631-stars', '2026-10-01')]),
-    /8631-stars.*public\/8631-stars.*src\/posts\/8631-stars/s,
-  );
+test('publicClash finds an MDX post whose slug is taken in public/', () => {
+  const pub = mkdtempSync(join(tmpdir(), 'public-'));
+  mkdirSync(join(pub, 'cv'));
+  assert.equal(publicClash(['vr-sky', 'cv'], pub), 'cv');
+  assert.equal(publicClash(['vr-sky'], pub), undefined);
 });

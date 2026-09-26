@@ -14,8 +14,9 @@ comes from the posts themselves, so adding a post no longer means editing
 - **One folder per post, named by its URL.** A post is either a finished HTML
   folder in `public/<slug>/` or an MDX source folder in `src/posts/<slug>/`.
 - **Finished folders stay as they are.** `public/` is copied to the site
-  unchanged. The one edit: posts that belong on the landing page gain an
-  `article:published_time` meta tag.
+  unchanged. Two edits: posts that belong on the landing page gain an
+  `article:published_time` meta tag, and `/generative-dataviz/` points its
+  GitHub links at the code's new path under `public/`.
 - **A post is listed when it has a date.** For HTML posts that is
   `<meta property="article:published_time">`; for MDX posts, the `date` field.
   `cv/` and `speed_research/episode_01.html` have none, so they stay online and
@@ -23,8 +24,17 @@ comes from the posts themselves, so adding a post no longer means editing
 - **The card reads the post's own head.** Title from `<title>`, text from
   `<meta name="description">`, image from `og:image` and its width and height.
   A dated post missing any of these fails the build.
-- **Two posts can't share a slug.** A folder in both `public/` and `src/posts/`
-  fails the build.
+- **Two posts can't share a slug.** An MDX post whose slug already exists in
+  `public/`, listed or not, fails the build.
+
+## Old links
+
+- `/generative-dataviz/generator/` was a README page rendered by Jekyll, which
+  the Actions deploy doesn't run. It now redirects to the generator's folder on
+  GitHub.
+- GitHub links to `tree/main/generative-dataviz/generator` (one sits in a
+  LinkedIn comment) land on a pointer README at that old path.
+- `/?con=Ori` still forwards to the panorama.
 
 ## Layout
 
@@ -56,7 +66,9 @@ One workflow, `.github/workflows/deploy.yml`:
 - **Every push, any branch:** install, unit tests, `astro check`, build.
 - **Push to `main`:** the same, then deploy `dist/` to GitHub Pages.
 
-Node 24 in CI. Local development works on Node 22.12+.
+Node 24 in CI. Local development needs Node 22.18+, for native TypeScript in
+the tests. `npm run dev` serves `public/<dir>/index.html` at `/<dir>/`, as Pages
+does.
 
 ## Cutover
 

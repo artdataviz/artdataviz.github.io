@@ -49,6 +49,26 @@ test('leaves missing tags undefined', () => {
   });
 });
 
+test('reads a value that contains ">"', () => {
+  const head = readPostHead('<head><meta name="description" content="Where p > 0.05, and why."></head>');
+  assert.equal(head.description, 'Where p > 0.05, and why.');
+});
+
+test('leaves ampersands in URLs alone', () => {
+  const head = readPostHead('<head><meta property="og:image" content="/card.jpg?v=2&copy=1&amp;x=3"></head>');
+  assert.equal(head.image, '/card.jpg?v=2&copy=1&x=3');
+});
+
+test('a commented-out </head> does not end the head', () => {
+  const head = readPostHead('<head><!-- </head> --><title>Kept</title></head>');
+  assert.equal(head.title, 'Kept');
+});
+
+test('keeps the calendar day as written, whatever the time zone', () => {
+  const head = readPostHead('<head><meta property="article:published_time" content="2026-09-10T01:00+03:00"></head>');
+  assert.equal(head.published, '2026-09-10');
+});
+
 test('trims whitespace around the title', () => {
   assert.equal(readPostHead('<head><title>\n  8,631 stars\n</title></head>').title, '8,631 stars');
 });
@@ -62,6 +82,10 @@ test('sitePath turns a same-site URL into a root-relative path', () => {
 test('sitePath resolves a relative path against the post folder', () => {
   assert.equal(sitePath('og.jpg', '8631-stars', site), '/8631-stars/og.jpg');
   assert.equal(sitePath('/shared/card.jpg', '8631-stars', site), '/shared/card.jpg');
+});
+
+test('sitePath works with or without a trailing slash on the site', () => {
+  assert.equal(sitePath('og.jpg', '8631-stars', `${site}/`), '/8631-stars/og.jpg');
 });
 
 test('sitePath keeps images hosted elsewhere as full URLs', () => {

@@ -6,7 +6,7 @@ deployed to GitHub Pages by GitHub Actions on every push to `main`.
 
 ## Run it
 
-Node 22.12 or newer.
+Node 22.18 or newer (the tests run TypeScript natively).
 
 ```sh
 npm install
@@ -75,8 +75,8 @@ Tailwind get added with `npx astro add react` (etc.) when a post needs them.
 Until the first MDX post exists, the build warns that `mdxPosts` is empty. That
 is expected.
 
-Two posts can't share a slug: a folder in both `public/` and `src/posts/` stops
-the build.
+Two posts can't share a slug: an MDX post whose slug is already taken in
+`public/` stops the build.
 
 ## Layout
 
@@ -90,6 +90,9 @@ src/posts/                 MDX posts
 docs/specs/                design notes
 .github/workflows/         build on every push, deploy from main
 ```
+
+`generative-dataviz/generator/README.md` at the root is a pointer: older links to
+the generator's code land there and find its new place in `public/`.
 
 `marketing/` holds source material for social posts; it is git-ignored and never
 published.
