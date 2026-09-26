@@ -46,6 +46,7 @@ Pass `--colors` for other colours or more groups.
 | `--row-value` | tallest bar = 63 rows | data units per glyph row |
 | `--hline VALUE:COLOR[:LABEL[:up\|down]]` | none | line with a y tick; the label sits past its end, with an optional arrow; repeatable |
 | `--line-style` | `dots` | `dots` or `dashes`, 1 px |
+| `--glyphs` | `10` | two symbols that stand in for 1 and 0, e.g. `zZ` for sleep or `$+` for sales; a space still marks a gap |
 | `--seed` | none: new bits every run | fixes the bits |
 | `--frames`, `--fps` | 192, 22.4 | loop length; every speed (2, 4, 6) must divide `--frames` |
 | `--still-only` | off | PNG and SVG of frame 0 only |

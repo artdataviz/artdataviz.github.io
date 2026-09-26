@@ -167,9 +167,28 @@ def test_share_of_full_bright_bits():
 LINES = ((2500, '#719D00', 'good', 'down'), (4000, '#DE5D4D', 'poor', 'up'))
 
 
-def make_chart(hlines=LINES):
+def make_chart(hlines=LINES, **style):
     values = pd.DataFrame({'x': [3049.0, 3387.0], 'y': [2653.0, 2123.0]}, index=['A', 'B'])
-    return Chart(values, Style(hlines=hlines), MOTION, 77, np.random.default_rng(0))
+    return Chart(values, Style(hlines=hlines, **style), MOTION, 77, np.random.default_rng(0))
+
+
+def test_glyphs_stand_in_for_one_and_zero():
+    chart = make_chart(glyphs='zZ')
+    chart.update(5)
+    for bar, _, rows in chart.bars:
+        bits = frame_state(bar, 5, MOTION).chars
+        shown = np.array([[t.get_text() for t in row] for row in rows])
+        assert (shown == np.select([bits == '1', bits == '0'], ['z', 'Z'], ' ')).all()
+
+
+def test_default_glyphs_are_bits():
+    assert Style().glyphs == '10'
+
+
+@pytest.mark.parametrize('glyphs', ['z', 'zZz', 'z ', ''])
+def test_glyphs_must_be_two_visible_characters(glyphs):
+    with pytest.raises(ValueError):
+        Style(glyphs=glyphs)
 
 
 def test_glyphs_have_no_boxes_so_rows_cannot_crop_each_other():
