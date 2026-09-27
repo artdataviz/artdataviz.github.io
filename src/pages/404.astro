@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import Topbar from '../components/Topbar.astro';
+---
+<Base
+  title="Not found · artdataviz"
+  description="There is no page at this address."
+  og={{
+    type: 'website',
+    image: '/8631-stars/og.jpg',
+    imageWidth: 1200,
+    imageHeight: 630,
+    imageAlt: 'A dark starfield with Orion and Sirius, captioned 8,631 stars.',
+  }}
+>
+  <meta slot="head" name="robots" content="noindex">
+  <Topbar home />
+  <main>
+    <h1>Nothing here</h1>
+    <p>There is no page at this address. <a href="/">All posts are on the front page.</a></p>
+  </main>
+</Base>
+
+<style>
+  main{max-width:44rem; margin:0 auto;
+    padding:clamp(28px,6vw,64px) max(clamp(20px,5vw,32px), var(--edge-r)) 0 max(clamp(20px,5vw,32px), var(--edge-l))}
+  h1{margin:0; font-size:clamp(30px,6vw,52px); line-height:1.1; letter-spacing:-.02em;
+    font-weight:600; color:#fff}
+  p{margin:.8em 0 0; color:var(--ink-dim); font-family:var(--sans); font-size:clamp(14px,2vw,17px)}
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid rgba(232,201,138,.35)}
+  a:hover{border-bottom-color:var(--accent)}
+</style>

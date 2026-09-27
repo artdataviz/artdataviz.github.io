@@ -1,0 +1,20 @@
+/* The same tokens and type as the HTML posts in public/, so the site reads as one. */
+:root{
+  --bg:#07080c; --panel:#0d0f16; --ink:#d9dbe3; --ink-dim:#9095a4;
+  --ink-faint:#666c7d; --rule:#1c2030;
+  --accent:#e8c98a;
+  --gutter:0px;
+  /* viewport-fit=cover puts the page under the notch, so pay the insets back. */
+  --edge-l:max(var(--gutter), env(safe-area-inset-left,  0px));
+  --edge-r:max(var(--gutter), env(safe-area-inset-right, 0px));
+  --edge-b:env(safe-area-inset-bottom, 0px);
+  --sans:ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (max-width:700px){ :root{ --gutter:14px; } }
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font:16px/1.7 ui-serif, Georgia, "Iowan Old Style", "Times New Roman", serif;
+  -webkit-font-smoothing:antialiased;
+}

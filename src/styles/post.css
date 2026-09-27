@@ -1,0 +1,66 @@
+/* Post chrome for MDX posts, lifted from public/generative-dataviz/ so both
+   kinds of post look the same. Prose rules live under .article, so they
+   never reach the top bar. */
+html{scroll-behavior:smooth}
+.sans{font-family:var(--sans)}
+
+/* Wide blocks measure the page, not the text column. */
+.page{container-type:inline-size}
+
+/* ---- page head ---- */
+.page-head{max-width:44rem; margin:0 auto;
+  padding:clamp(18px,3.4vw,34px) max(clamp(20px,5vw,32px), var(--edge-r))
+          clamp(14px,2.5vw,20px) max(clamp(20px,5vw,32px), var(--edge-l))}
+.page-head h1{margin:0; font-size:clamp(26px,5vw,46px); line-height:1.1; letter-spacing:-.02em;
+  font-weight:600; color:#fff}
+.page-head .sub{margin:.55em 0 0; color:var(--ink-dim); font-family:var(--sans);
+  font-size:clamp(13.5px,2vw,16px); line-height:1.55}
+
+/* ---- article ---- */
+.article{max-width:44rem; margin:0 auto;
+  padding:clamp(34px,6vw,72px) max(clamp(20px,5vw,32px), var(--edge-r))
+          calc(96px + var(--edge-b)) max(clamp(20px,5vw,32px), var(--edge-l))}
+.article .lede{font-size:clamp(18px,2.6vw,21px); line-height:1.62; color:var(--ink)}
+.article h2{font-family:var(--sans); font-size:13px; letter-spacing:.15em; text-transform:uppercase;
+  font-weight:650; color:var(--accent); margin:3.2em 0 .2em}
+.article h2 + p{margin-top:.6em}
+.article h3{font-size:clamp(19px,3vw,23px); font-weight:600; letter-spacing:-.01em;
+  margin:2.2em 0 .1em; color:#fff}
+.article p{margin:1.05em 0}
+.article a{color:var(--accent); text-decoration:none; border-bottom:1px solid rgba(232,201,138,.35)}
+.article a:hover{border-bottom-color:var(--accent)}
+.article strong{color:#fff; font-weight:600}
+.article hr{border:0; border-top:1px solid var(--rule); margin:3.4em 0}
+.article ul, .article ol{padding-left:1.2em}
+.article li{margin:.5em 0}
+.article code, .article pre{font-family:var(--mono)}
+.article code{font-size:.88em; color:var(--accent); background:rgba(232,201,138,.08);
+  padding:.12em .38em; border-radius:4px}
+.article pre{background:var(--panel); border:1px solid var(--rule); border-radius:10px;
+  padding:16px 18px; overflow-x:auto; overflow-y:hidden; font-size:14px;
+  line-height:1.6; color:#e3e6ee; -webkit-overflow-scrolling:touch}
+.article pre code{background:none; color:inherit; padding:0; font-size:inherit}
+.article .tablewrap{overflow-x:auto; margin:1.6em 0; border:1px solid var(--rule); border-radius:10px}
+.article table{border-collapse:collapse; width:100%; font-family:var(--sans); font-size:14.5px}
+.article th, .article td{padding:11px 14px; text-align:left; border-bottom:1px solid var(--rule); white-space:nowrap}
+.article thead th{color:var(--ink-dim); font-weight:600; font-size:12px; letter-spacing:.09em;
+  text-transform:uppercase; background:var(--panel)}
+.article tbody tr:last-child td{border-bottom:0}
+.article .num{text-align:right; font-variant-numeric:tabular-nums}
+.article .note{border-left:2px solid var(--accent); padding:.1em 0 .1em 1.1em; margin:1.8em 0;
+  color:var(--ink-dim)}
+.article figure{margin:1.8em 0; background:var(--panel); border:1px solid var(--rule);
+  border-radius:12px; overflow:hidden}
+.article figure img, .article figure video, .article figure canvas{display:block; width:100%; height:auto}
+.article figcaption{padding:10px 16px 12px; color:var(--ink-faint); font-family:var(--sans);
+  font-size:13px; border-top:1px solid var(--rule)}
+.article footer{border-top:1px solid var(--rule); margin-top:4em; padding-top:1.6em;
+  color:var(--ink-faint); font-family:var(--sans); font-size:14px}
+.article footer a{color:var(--ink-dim); border-bottom-color:var(--rule)}
+
+/* <Wide>: up to 1200px, centred on the page, edge to edge on phones. */
+.article .wide{margin-inline:calc((100% - min(1200px, 100cqw - 2 * var(--gutter))) / 2)}
+/* A wide block that opens the article sits right under the heading, like the
+   chart on /generative-dataviz/. */
+.article:has(> .wide:first-child){padding-top:0}
+.article > .wide:first-child > figure{margin-top:0}

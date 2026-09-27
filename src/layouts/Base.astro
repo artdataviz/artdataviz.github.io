@@ -1,0 +1,51 @@
+---
+import '../styles/tokens.css';
+import { isoDate } from '../lib/dates';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Canonical path, e.g. "/" or "/vr-sky/". Leave out for pages without one, like 404. */
+  path?: string;
+  og: {
+    title?: string;
+    type: 'website' | 'article';
+    /** 1200×630 share card: a path on this site or a full URL. */
+    image: string;
+    imageWidth: number;
+    imageHeight: number;
+    imageAlt: string;
+    published?: Date;
+  };
+}
+
+const { title, description, path, og } = Astro.props;
+const abs = (p: string) => new URL(p, Astro.site).href;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>{title}</title>
+<meta name="description" content={description}>
+{path && <link rel="canonical" href={abs(path)}>}
+<slot name="head" />
+
+<meta property="og:title" content={og.title ?? title}>
+<meta property="og:type" content={og.type}>
+{path && <meta property="og:url" content={abs(path)}>}
+<meta property="og:image" content={abs(og.image)}>
+<meta property="og:image:width" content={String(og.imageWidth)}>
+<meta property="og:image:height" content={String(og.imageHeight)}>
+<meta property="og:image:alt" content={og.imageAlt}>
+<meta property="og:description" content={description}>
+<meta property="og:site_name" content="artdataviz">
+<meta property="og:locale" content="en_GB">
+{og.published && <meta property="article:published_time" content={isoDate(og.published)}>}
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<slot />
+</body>
+</html>

@@ -52,3 +52,8 @@ Temporary Items
 ### Project ###
 # Source material for posts, not part of the published site.
 marketing/
+
+# Astro
+node_modules/
+dist/
+.astro/
