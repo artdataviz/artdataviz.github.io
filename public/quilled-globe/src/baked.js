@@ -75,7 +75,7 @@ export class BakedGlobe {
   }
 
   // Coarsest first. A level that is not there is skipped, as long as one is.
-  async init(levels = [-2, -1, 0, 1]) {
+  async init(levels = [-3, -2, -1, 0, 1]) {
     const loaded = await Promise.all(levels.map(async (level) => {
       const res = await fetch(`${this.dataUrl}bake/${level}/tiles.json`);
       if (res.ok) return parseLevel(await res.json());
