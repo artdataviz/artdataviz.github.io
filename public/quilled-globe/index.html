@@ -94,6 +94,36 @@
 { "imports": { "three": "./lib/three/build/three.module.js",
                "three/addons/": "./lib/three/examples/jsm/" } }
 </script>
+<!-- After the import map: a map declared once a module has begun loading is refused. -->
+<!-- Everything the first frame needs starts with the HTML instead of being found
+     one import at a time: the modules, the tile lists, the texture transcoder, and
+     level -3 - two tiles that cover the globe, which every start view draws first.
+     Measured on a 280 kB/s link: the first texture request waited 5.2 s on that
+     chain, and the first tile showed at 13.8 s. -->
+<link rel="modulepreload" href="./src/globe.js">
+<link rel="modulepreload" href="./src/baked.js">
+<link rel="modulepreload" href="./src/bakegrid.js">
+<link rel="modulepreload" href="./src/geo.js">
+<link rel="modulepreload" href="./src/shader.js">
+<link rel="modulepreload" href="./lib/three/build/three.module.js">
+<link rel="modulepreload" href="./lib/three/build/three.core.js">
+<link rel="modulepreload" href="./lib/three/examples/jsm/controls/OrbitControls.js">
+<link rel="modulepreload" href="./lib/three/examples/jsm/loaders/KTX2Loader.js">
+<link rel="modulepreload" href="./lib/three/examples/jsm/utils/WorkerPool.js">
+<link rel="modulepreload" href="./lib/three/examples/jsm/libs/ktx-parse.module.js">
+<link rel="modulepreload" href="./lib/three/examples/jsm/libs/zstddec.module.js">
+<link rel="modulepreload" href="./lib/three/examples/jsm/math/ColorSpaces.js">
+<link rel="preload" as="fetch" crossorigin href="./lib/three/examples/jsm/libs/basis/basis_transcoder.js">
+<link rel="preload" as="fetch" crossorigin href="./lib/three/examples/jsm/libs/basis/basis_transcoder.wasm">
+<link rel="preload" as="fetch" crossorigin href="./bake/-3/tiles.json">
+<link rel="preload" as="fetch" crossorigin href="./bake/-2/tiles.json">
+<link rel="preload" as="fetch" crossorigin href="./bake/-1/tiles.json">
+<link rel="preload" as="fetch" crossorigin href="./bake/0/tiles.json">
+<link rel="preload" as="fetch" crossorigin href="./bake/1/tiles.json">
+<link rel="preload" as="fetch" crossorigin href="./bake/-3/0/0.colour.ktx2">
+<link rel="preload" as="fetch" crossorigin href="./bake/-3/0/0.surface.ktx2">
+<link rel="preload" as="fetch" crossorigin href="./bake/-3/0/1.colour.ktx2">
+<link rel="preload" as="fetch" crossorigin href="./bake/-3/0/1.surface.ktx2">
 </head>
 <body>
 
