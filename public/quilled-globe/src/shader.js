@@ -60,9 +60,15 @@ void main() {
   // AO darkens the room fully and the direct light by half: it is all the bake
   // keeps of the shadow between coil turns.
   float occ = mix(1.0, ao, 0.5);
-  vec3 direct = (albedo * ((1.0 - TRANSLUCENCY) * front + TRANSLUCENCY * back)
-               + (1.0 - TRANSLUCENCY) * SPECULAR * front) * occ / 3.14159265;
-  vec3 radiance = direct + ambient * ao * (albedo + (1.0 - TRANSLUCENCY) * SPECULAR);
+  // The board between the coils is not paper: no sheet specular, nothing coming
+  // through it. Lit as paper, its dark brown (linear luminance 0.017) drowned in
+  // the white specular and showed as light grey. The darkest dye, crimson, is 0.063.
+  float paper = smoothstep(0.02, 0.05, dot(albedo, vec3(0.2126, 0.7152, 0.0722)));
+  float through = TRANSLUCENCY * paper;
+  float spec = (1.0 - through) * SPECULAR * paper;
+  vec3 direct = (albedo * ((1.0 - through) * front + through * back) + spec * front)
+              * occ / 3.14159265;
+  vec3 radiance = direct + ambient * ao * (albedo + spec);
   gl_FragColor = vec4(radiance, 1.0);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
